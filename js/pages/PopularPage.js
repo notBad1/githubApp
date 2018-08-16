@@ -16,7 +16,10 @@ import ScrollableTabView, {ScrollableTabBar,} from 'react-native-scrollable-tab-
 // 导入页面组件
 import NavigatorBar from '../common/navigatorBar'
 import PopularTab from '../common/PopularTab'
+// 自定义页签
 import CostomKeyPage from '../common/CostomKeyPage'
+// 页签排序
+import SortKeyPage from '../common/SortKeyPage'
 // 读取本地标签
 import LanguageDao, {FLAG_LANGUAGE}  from '../expand/dao/LanguageDao'
 
@@ -97,6 +100,17 @@ export default class PopularPages extends Component {
                             onPress={() => {
                                 this.props.navigator.push({
                                     component: CostomKeyPage,
+                                    params: {...this.props}
+                                })
+                            }}
+                        >
+                            <Image style={{width: 26, height: 26, margin: 12}}
+                                   source={require('../../res/images/ic_more_vert_white_48pt.png')}/>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.props.navigator.push({
+                                    component: SortKeyPage,
                                     params: {...this.props}
                                 })
                             }}
