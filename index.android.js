@@ -9,9 +9,7 @@ import {
     AppRegistry,
     StyleSheet,
     Text,
-    View,
-    Image,
-    Navigator
+    View
 } from 'react-native';
 
 // 导入页面组件

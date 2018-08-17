@@ -18,13 +18,13 @@ import {
 } from 'react-native';
 
 // 导航栏
-import NavigatorBar from '../common/navigatorBar'
+import NavigatorBar from '../../common/navigatorBar'
 // 读取本地标签
-import LanguageDao, {FLAG_LANGUAGE}  from '../expand/dao/LanguageDao'
+import LanguageDao, {FLAG_LANGUAGE}  from '../../expand/dao/LanguageDao'
 // 操作数组方法
-import ArrayUtils from '../util/ArrayUtils'
+import ArrayUtils from '../../util/ArrayUtils'
 // 返回按钮
-import ViewUtil from '../util/ViewUtil'
+import ViewUtil from '../../util/ViewUtil'
 
 // 导入第三方组件
 import SortableListView from 'react-native-sortable-listview' // 具有可拖拽功能的listView

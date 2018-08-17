@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     cell_container: {
         backgroundColor: '#fff',
         paddingHorizontal: 20,
-        paddingVertical: 10,
+        paddingVertical: 15,
         marginBottom: 6,
         borderRadius: 3,
         borderColor: '#ddd',

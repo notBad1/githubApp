@@ -75,7 +75,6 @@ export default class PopularPages extends Component {
                     />
                 }
             />
-            <Text>{this.state.result}</Text>
         </View>
     }
 }

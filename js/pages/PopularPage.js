@@ -17,9 +17,9 @@ import ScrollableTabView, {ScrollableTabBar,} from 'react-native-scrollable-tab-
 import NavigatorBar from '../common/navigatorBar'
 import PopularTab from '../common/PopularTab'
 // 自定义页签
-import CostomKeyPage from '../common/CostomKeyPage'
+import CostomKeyPage from './tags/CostomKeyPage'
 // 页签排序
-import SortKeyPage from '../common/SortKeyPage'
+import SortKeyPage from './tags/SortKeyPage'
 // 读取本地标签
 import LanguageDao, {FLAG_LANGUAGE}  from '../expand/dao/LanguageDao'
 
@@ -128,7 +128,6 @@ export default class PopularPages extends Component {
 }
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        // backgroundColor: '#fff',
+        flex: 1
     }
 });

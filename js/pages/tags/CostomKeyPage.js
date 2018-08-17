@@ -19,13 +19,13 @@ import {
 
 // 页面组件
 // 导航栏
-import NavigatorBar from '../common/navigatorBar'
+import NavigatorBar from '../../common/navigatorBar'
 // 返回按钮
-import ViewUtil from '../util/ViewUtil'
+import ViewUtil from '../../util/ViewUtil'
 // 读取本地标签
-import LanguageDao, {FLAG_LANGUAGE}  from '../expand/dao/LanguageDao'
+import LanguageDao, {FLAG_LANGUAGE}  from '../../expand/dao/LanguageDao'
 // 操作数组方法
-import ArrayUtils from '../util/ArrayUtils'
+import ArrayUtils from '../../util/ArrayUtils'
 
 // 导入第三方组件
 import CheckBox from 'react-native-check-box'
