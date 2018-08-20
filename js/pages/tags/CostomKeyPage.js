@@ -1,6 +1,7 @@
 /**
  * Created by Administrator on 2018-8-14.
  * 自定义标签页
+ * 标签移除页
  */
 /**
  * Created by Administrator on 2018-8-10.
@@ -11,7 +12,6 @@ import {
     StyleSheet,
     Text,
     View,
-    TouchableOpacity,
     ScrollView,
     Image,
     Alert
@@ -37,6 +37,8 @@ export default class PopularPages extends Component {
         this.languageDao = new LanguageDao(FLAG_LANGUAGE.flage_key);
         // 定义数组用于保存用户所做的修改
         this.changeValues = [];
+        // 定义是否是标签移除页 ,  通过this.props.isRemoveKey判断用户点击的标签移除还是自定义标签
+        this.isRemoveKey = this.props.isRemoveKey ? true : false;
         this.state = {
             dataArray: [] // 标签数组
         };
@@ -65,11 +67,13 @@ export default class PopularPages extends Component {
     // checkBox
     renderCheckBox(data) {
         let leftText = data.name;
+        // 在标签移除页面，checkBox默认都不选中
+        let isChecked = this.isRemoveKey? false : data.checked;
         return (
             <CheckBox
                 style={{flex: 1, padding: 10}}
                 onClick={() => this.onClick(data)}
-                isChecked={data.checked} // 是否选中
+                isChecked={isChecked} // 是否选中
                 leftText={leftText} // 左侧文字
                 leftTextStyle={{color: '#333', fontSize: 16}}
                 checkedImage={<Image source={require('./img/ic_check_box.png')} style={{tintColor: '#2196f3'}}/>}
@@ -98,8 +102,8 @@ export default class PopularPages extends Component {
 
         views.push(
             <View key={len - 1}>
-                <View style={styles.item}>
-                    {len % 2 === 0 && this.renderCheckBox(this.state.dataArray[len - 2])}
+                <View style={styles.items}>
+                    {len % 2 === 0 ? this.renderCheckBox(this.state.dataArray[len - 2]): null}
                     {this.renderCheckBox(this.state.dataArray[len - 1])}
                 </View>
                 <View style={styles.line}></View>
@@ -111,7 +115,10 @@ export default class PopularPages extends Component {
 
     // checkBox点击事件
     onClick(data) {
-        data.checked = !data.checked;
+        // 在标签移除页面，点击是否选中不修改其原本的订阅状态
+        if(!this.isRemoveKey){
+            data.checked = !data.checked;
+        }
         // 记录下用户所做的修改  this.changeValues保存用户所做修改的数组
         ArrayUtils.updateArray(data, this.changeValues);
     }
@@ -123,6 +130,11 @@ export default class PopularPages extends Component {
             this.props.navigator.pop();
             return;
         }
+        // 当用户点击的是移除按钮的时候，遍历用户修改的数组，在this.state.dataArray将其移除
+        for(let i=0,l=this.changeValues.length;i<l;i++){
+            ArrayUtils.remove(this.state.dataArray,this.changeValues[i]);
+        }
+
         // 如果用户做修改，就将用户修改保存到数据库中
         this.languageDao.save(this.state.dataArray);
         this.props.navigator.pop();
@@ -138,17 +150,27 @@ export default class PopularPages extends Component {
             '确认退出',
             '要保存修改吗？',
             [
-                {text: '不保存', onPress: () => {this.props.navigator.pop()}},
-                {text: '保存', onPress: () => {this.onSave();}},
+                {
+                    text: '不保存', onPress: () => {
+                    this.props.navigator.pop()
+                }
+                },
+                {
+                    text: '保存', onPress: () => {
+                    this.onSave();
+                }
+                },
             ]
         )
     }
 
 
     render() {
+        let title = this.isRemoveKey ? '标签移除' : '自定义标签';
+        let rightButtonText = this.isRemoveKey ? '移除' : '保存';
         return <View style={styles.container}>
             <NavigatorBar
-                title={'自定义标签页'}
+                title={title}
                 style={{
                     backgroundColor: '#2196f3'
                 }}
@@ -156,15 +178,7 @@ export default class PopularPages extends Component {
                     backgroundColor: '#2196f3'
                 }}
                 leftButton={ViewUtil.getLeftButton(() => this.onGoBack())}
-                rightButton={
-                    <TouchableOpacity style={{padding: 8}}
-                                      onPress={() => this.onSave()}
-                    >
-                        <View>
-                            <Text style={{fontSize: 18, color: '#fff'}}>保存</Text>
-                        </View>
-                    </TouchableOpacity>
-                }
+                rightButton={ViewUtil.getRightButton(rightButtonText, () => this.onSave())}
             />
             <ScrollView>
                 {this.renderView()}

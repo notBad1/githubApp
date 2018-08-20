@@ -118,6 +118,20 @@ export default class PopularPages extends Component {
                             <Image style={{width: 26, height: 26, margin: 12}}
                                    source={require('../../res/images/ic_more_vert_white_48pt.png')}/>
                         </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.props.navigator.push({
+                                    component: CostomKeyPage,
+                                    params: {
+                                        ...this.props,
+                                        isRemoveKey: true // 标识，表示点击的是标签移除页面
+                                    }
+                                })
+                            }}
+                        >
+                            <Image style={{width: 26, height: 26, margin: 12}}
+                                   source={require('../../res/images/ic_more_vert_white_48pt.png')}/>
+                        </TouchableOpacity>
                     </View>
                 }
             />

@@ -43,13 +43,23 @@ export default class ArrayUtils {
         // 先判断两个数组是否为空
         if (!(arr1 && arr2)) return false;
         // 然后判断两个数组的长度是否相同
-        if(arr1.length!== arr2.length) return false;
+        if (arr1.length !== arr2.length) return false;
         // 如果长度相等的话，判断两个数组中的每一个元素是否相等
-        for(let i=0,len=arr1.length; i<len;i++){
-            if(arr1[i] !== arr2[i]) return false;
+        for (let i = 0, len = arr1.length; i < len; i++) {
+            if (arr1[i] !== arr2[i]) return false;
         }
         // 遍历完所有的元素后，如果都相同的话
         return true;
+    }
+
+    // 删除数组中的元素——从指定数组中移除对应元素
+    static remove(arr, item) {
+        if(!arr)return ; //如果数组为空，就直接返回
+        for (let i = 0, l = arr.length; i < l; i++) {
+            if(arr[i] === item){
+                arr.splice(i,1);
+            }
+        }
     }
 
 }
