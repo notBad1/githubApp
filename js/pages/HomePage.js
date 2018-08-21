@@ -73,8 +73,8 @@ export default class HomePage extends Component {
                     renderSelectedIcon={() => <Image style={[styles.image, {tintColor: '#2196f3'}]}
                                                      source={require('../../res/images/ic_trending.png')}/>}
                     onPress={() => this.setState({selectedTab: 'tb_trending'})}>
-                    {/*<TrendingPage />*/}
-                    <WebViewTest/>
+                    <TrendingPage />
+                    {/*<WebViewTest/>*/}
                 </TabNavigator.Item>
                 <TabNavigator.Item
                     selected={this.state.selectedTab === 'tb_favorite'}

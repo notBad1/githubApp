@@ -15,7 +15,7 @@ import ScrollableTabView, {ScrollableTabBar,} from 'react-native-scrollable-tab-
 
 // 导入页面组件
 import NavigatorBar from '../common/navigatorBar'
-import PopularTab from '../common/PopularTab'
+import PopularTab from './PopularTab'
 // 自定义页签
 import CostomKeyPage from './tags/CostomKeyPage'
 // 页签排序
@@ -68,7 +68,7 @@ export default class PopularPages extends Component {
                 renderTabBar={() => <ScrollableTabBar />}
             >
                 {this.state.languages.map((item, i, arry) => {
-                    return item.checked && <PopularTab key={i} tabLabel={'' + item.name}/>
+                    return item.checked && <PopularTab key={i} tabLabel={'' + item.name} {...this.props}/>
                 })}
             </ScrollableTabView>
             : null

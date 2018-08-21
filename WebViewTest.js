@@ -12,7 +12,6 @@ import {
     DeviceEventEmitter
 } from 'react-native';
 
-import Toast, {DURATION} from 'react-native-easy-toast'
 import NavigatorBar from './js/common/navigatorBar'
 
 const URL = 'https://www.imooc.com' // 页面进入默认显示的URL
@@ -84,9 +83,6 @@ export default class WebViewTest extends Component {
                         this.onNavigationStateChange(navState)
                     }}
                 />
-                <Toast ref={toast => {
-                    this.toast = toast
-                }}/>
             </View>
         )
     }

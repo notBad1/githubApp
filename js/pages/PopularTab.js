@@ -15,6 +15,7 @@ import {
 // 导入页面组件
 import DataRepository from '../expand/dao/DataRepository'
 import RepositoryCell from '../common/RepositoryCell'
+import RepositoryDetail from '../pages/RepositoryDetail'
 
 
 // URL拼接
@@ -51,11 +52,11 @@ export default class PopularPages extends Component {
                 // 如果有result且有result.update_date且result.update_date在四个小时之前
                 if (result && result.update_date && !this.dataRepository.checkDate(result.update_date)) {
                     // 提示
-                    DeviceEventEmitter.emit('showToast','数据过时');
+                    DeviceEventEmitter.emit('showToast', '数据过时');
                     // 从网络上获取新的数据
                     return this.dataRepository.fetchNetRepository(url);
-                }else{
-                    DeviceEventEmitter.emit('showToast','显示缓存数据');
+                } else {
+                    DeviceEventEmitter.emit('showToast', '显示缓存数据');
                 }
             })
             .then((result) => {//取得从网络上获取的新的数据
@@ -65,7 +66,7 @@ export default class PopularPages extends Component {
                     dataSource: this.state.dataSource.cloneWithRows(result),
                     isLoading: false // 数据加载完成停止刷新
                 });
-                DeviceEventEmitter.emit('showToast','显示网络数据')
+                DeviceEventEmitter.emit('showToast', '显示网络数据')
             })
             .catch(error => {
                 this.setState({
@@ -78,11 +79,27 @@ export default class PopularPages extends Component {
         this.loadData();
     }
 
+    onSelected(data) {
+        this.props.navigator.push({
+            component: RepositoryDetail,
+            params: {
+                item: data,
+                ...this.props
+            }
+        })
+    }
+
     render() {
         return <View style={styles.container}>
             <ListView
                 dataSource={this.state.dataSource}
-                renderRow={(data) => <RepositoryCell data={data}/>}
+                renderRow={(data) => <RepositoryCell
+                    key={data.id}
+                    data={data}
+                    onSelected={() => {
+                        this.onSelected(data)
+                    }}
+                />}
                 // 下拉刷新组件
                 refreshControl={
                     <RefreshControl
