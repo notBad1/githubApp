@@ -2,7 +2,6 @@
  * Created by Administrator on 2018-8-14.
  * 从数据库中获取语言数据
  */
-import React, {Component} from 'react';
 import {
     AsyncStorage
 } from 'react-native';

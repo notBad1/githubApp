@@ -124,7 +124,7 @@ export default class PopularPages extends Component {
                                     component: CostomKeyPage,
                                     params: {
                                         ...this.props,
-                                        isRemoveKey: true // 标识，表示点击的是标签移除页面
+                                        isRemoveKey: true // 标识，
                                     }
                                 })
                             }}
