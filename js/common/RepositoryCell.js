@@ -1,6 +1,7 @@
 /**
  * Created by Administrator on 2018-8-13.
- * 最热页面，页面显示每一列
+ * 最热页面，趋势 ，页面显示每一列
+ * 项目收藏
  */
 import React, {Component} from 'react';
 import {
@@ -11,27 +12,89 @@ import {
     TouchableOpacity
 } from 'react-native';
 
+import HTMLView from 'react-native-htmlview';
 
 
 export default class RepositoryCell extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            isFavorite: false, //是否收藏
+            favoriteIcon: require('../../res/images/ic_unstar_transparent.png')
+        }
+    }
+
+    setFavoriteState(isFavorite) {
+        this.setState({
+            isFavorite: isFavorite,
+            favoriteIcon: isFavorite ? require('../../res/images/ic_star.png') : require('../../res/images/ic_unstar_transparent.png')
+        })
+    }
+
+    onPressfavorite() {
+        this.setFavoriteState(!this.state.isFavorite)
     }
 
     render() {
+        let description = '<p>' + this.props.data.description + '</p>';
+        let favoriteBut = <TouchableOpacity
+            onPress={() => {
+                this.onPressfavorite()
+            }}
+        >
+            <Image style={{height: 22, width: 22, tintColor: '#2196f3'}}
+                   source={this.state.favoriteIcon}/>
+        </TouchableOpacity>
         return <TouchableOpacity style={styles.container}
                                  onPress={this.props.onSelected}
         >
             <View style={styles.cell_container}>
-                <Text style={styles.title}>{this.props.data.full_name}</Text>
-                <Text style={{color: '#666', fontSize: 14, marginBottom: 8}}>{this.props.data.description}</Text>
+                <Text
+                    style={styles.title}>{this.props.flag === 'trending' ? this.props.data.fullName : this.props.data.full_name}</Text>
+
+                {
+                    this.props.flag === 'trending' ? <HTMLView
+                        value={description}
+                        onLinkPress={(url) => {
+                        }}
+                        stylesheet={{
+                            p: styles.text,
+                            a: styles.text
+                        }}
+                    /> :
+                        <Text
+                            style={styles.text}>{this.props.data.description}</Text>
+                }
+
+
+                {
+                    this.props.flag === 'trending' && <Text style={styles.text}>Star: {this.props.data.meta}</Text>
+                }
+
                 <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <Text style={{color: '#666', fontSize: 14}}>Author: </Text>
-                        <Image style={{height: 22, width: 22}} source={{uri: this.props.data.owner.avatar_url}}/>
+                        <Text style={{
+                            color: '#333',
+                            fontSize: 14
+                        }}>{this.props.flag === 'trending' ? 'Build by' : 'Author'}: </Text>
+                        {
+                            this.props.flag === 'trending' ?
+                                this.props.data.contributors.map((item, i, array) => {
+                                    return <Image style={{height: 22, width: 22}} key={i} source={{uri: array[i]}}/>
+                                }) :
+                                <Image style={{height: 22, width: 22}}
+                                       source={{uri: this.props.data.owner.avatar_url}}/>
+                        }
+
                     </View>
-                    <Text style={{color: '#666', fontSize: 14}}>Star: {this.props.data.stargazers_count}</Text>
-                    <Image style={{height: 22, width: 22}} source={require('../../res/images/ic_star.png')}/>
+                    {
+                        this.props.flag !== 'trending' && <Text style={{
+                            color: '#666',
+                            fontSize: 14
+                        }}>Star: { this.props.data.stargazers_count}</Text>
+                    }
+
+                    {favoriteBut}
                 </View>
             </View>
         </TouchableOpacity>
@@ -54,7 +117,7 @@ const styles = StyleSheet.create({
         // 阴影效果
         // ios
         shadowColor: '#ddd',
-        shadowOffset:{width: 0.5,height: 0.5},
+        shadowOffset: {width: 0.5, height: 0.5},
         shadowOpacity: 0.4,
         shadowRadius: 1,
         // android
@@ -65,5 +128,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '900',
         marginBottom: 5
+    },
+    text: {
+        color: '#666',
+        fontSize: 14,
+        marginBottom: 8
     }
 });

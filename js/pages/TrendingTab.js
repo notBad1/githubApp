@@ -13,14 +13,13 @@ import {
 } from 'react-native';
 
 // 导入页面组件
-import DataRepository,{FLAG_STORYGE} from '../expand/dao/DataRepository'
+import DataRepository, {FLAG_STORYGE} from '../expand/dao/DataRepository'
 import RepositoryCell from '../common/RepositoryCell'
 import RepositoryDetail from '../pages/RepositoryDetail'
 
 
 // URL拼接
-const URL = 'https://api.github.com/search/repositories?q=';
-const QUERY_STR = '&sort=stars';
+const URL = 'https://github.com/trending/';
 
 export default class PopularPages extends Component {
     constructor(props) {
@@ -31,20 +30,25 @@ export default class PopularPages extends Component {
             isLoading: false
         };
         // 初始化
-        this.dataRepository = new DataRepository(FLAG_STORYGE.flag_popular);
+        this.dataRepository = new DataRepository(FLAG_STORYGE.flag_trending);
     }
 
-    loadData() {
+    getFetchUrl(timeSpan, key) {
+        return URL + key + '?since=' + timeSpan.searchText
+    }
+
+    //加载数据 ——timeSpan 时间选择，isRefresh 是否刷新
+    loadData(timeSpan, isRefresh) {
         // 加载数据的时候刷新
-        this.setState({
-            isLoading: true
+        this.updateSetState({
+            isLoading: isRefresh
         });
-        let url = URL + this.props.tabLabel;
+        let url = this.getFetchUrl(timeSpan, this.props.path);
         this.dataRepository.fetchRepository(url)
             .then(result => {
                 // 如果有result且有result.items 就返回result.items 否则就返回result，如果有result就返回result，否则就返回[]
                 let items = result && result.items ? result.items : result ? result : [];
-                this.setState({
+                this.updateSetState({
                     dataSource: this.state.dataSource.cloneWithRows(items),
                     isLoading: false // 数据加载完成停止刷新
                 });
@@ -62,23 +66,41 @@ export default class PopularPages extends Component {
             .then((result) => {//取得从网络上获取的新的数据
                 // 如果从网络上获取的数据数组为空或者长度为0，我们就直接返回，不用刷新数据，否则就刷新数据
                 if (!result || result.length === 0) return;
-                this.setState({
+                this.updateSetState({
                     dataSource: this.state.dataSource.cloneWithRows(result),
                     isLoading: false // 数据加载完成停止刷新
                 });
                 DeviceEventEmitter.emit('showToast', '显示网络数据')
             })
             .catch(error => {
-                this.setState({
+                this.updateSetState({
                     error: JSON.stringify(error)
                 })
             })
     }
 
-    componentDidMount() {
-        this.loadData();
+    componentDidMount() { //组件第一次绘制
+        this.loadData(this.props.timeSpan, true);
     }
 
+    componentWillReceiveProps(nextProps) { // 在props改变的时候调用
+        if (nextProps.timeSpan !== this.props.timeSpan) {
+            this.loadData(nextProps.timeSpan, true);
+        }
+    }
+
+    // 下拉刷新
+    onRefresh() {
+        this.loadData(this.props.timeSpan, true);
+    }
+
+    // 封装setState方法
+    updateSetState(dic) {
+        if (!this)return;
+        this.setState(dic)
+    }
+
+    // 打开详情页
     onSelected(data) {
         this.props.navigator.push({
             component: RepositoryDetail,
@@ -96,6 +118,7 @@ export default class PopularPages extends Component {
                 renderRow={(data) => <RepositoryCell
                     key={data.id}
                     data={data}
+                    flag="trending"
                     onSelected={() => {
                         this.onSelected(data)
                     }}
@@ -105,7 +128,7 @@ export default class PopularPages extends Component {
                     <RefreshControl
                         refreshing={this.state.isLoading}// 刷新状态
                         // 监听下拉状态 用户下拉刷新的时候获取数据
-                        onRefresh={() => this.loadData()}
+                        onRefresh={() => this.onRefresh()}
                         // 指示器颜色
                         colors={['#2196f3']} //android
                         tintColor={["#2196f3"]} //ios

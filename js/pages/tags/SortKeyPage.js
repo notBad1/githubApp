@@ -33,7 +33,7 @@ import SortableListView from 'react-native-sortable-listview' // 具有可拖拽
 export default class SortKeyPage extends Component {
     constructor(props) {
         super(props);
-        this.languageDao = new LanguageDao(FLAG_LANGUAGE.flage_key);// 初始化LanguageDao
+        this.languageDao = new LanguageDao(this.props.flag);// 初始化LanguageDao
         this.dataArray = [];// 所有标签数组
         this.sortResultArray = []; // 排序之后新生成的数组
         this.originalCheckedArray = []; // 记录上次标签排序的顺序
@@ -187,7 +187,7 @@ class SortCell extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor:'#f5f5f5'
+        backgroundColor: '#f5f5f5'
     },
     item: {
         borderBottomWidth: 1,

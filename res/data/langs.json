@@ -11,7 +11,7 @@
     "checked": true
   },
   {
-    "path": "as3",
+    "path": "actionscript",
     "name": "ActionScript",
     "short_name": "AS",
     "checked": true
@@ -22,13 +22,13 @@
     "checked": true
   },
   {
-    "path": "nasm",
+    "path": "assembly",
     "name": "Assembly",
     "short_name": "NASM",
     "checked": true
   },
   {
-    "path": "bat",
+    "path": "batchfile",
     "name": "Batchfile",
     "short_name": "BAT",
     "checked": true
@@ -39,12 +39,12 @@
     "checked": true
   },
   {
-    "path": "csharp",
+    "path": "c%23",
     "name": "C#",
     "checked": true
   },
   {
-    "path": "cpp",
+    "path": "c++",
     "name": "C++",
     "checked": true
   },

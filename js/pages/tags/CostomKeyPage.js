@@ -5,7 +5,9 @@
  */
 /**
  * Created by Administrator on 2018-8-10.
- * 自定义标签页
+ * 自定义标签页 flag=key
+ * 删除标签 isRemoveKey=true
+ * 自定义语言 flag=languages
  */
 import React, {Component} from 'react';
 import {
@@ -34,7 +36,7 @@ export default class PopularPages extends Component {
     constructor(props) {
         super(props);
         // 初始化LanguageDao
-        this.languageDao = new LanguageDao(FLAG_LANGUAGE.flage_key);
+        this.languageDao = new LanguageDao(this.props.flag);
         // 定义数组用于保存用户所做的修改
         this.changeValues = [];
         // 定义是否是标签移除页 ,  通过this.props.isRemoveKey判断用户点击的标签移除还是自定义标签
@@ -68,7 +70,7 @@ export default class PopularPages extends Component {
     renderCheckBox(data) {
         let leftText = data.name;
         // 在标签移除页面，checkBox默认都不选中
-        let isChecked = this.isRemoveKey? false : data.checked;
+        let isChecked = this.isRemoveKey ? false : data.checked;
         return (
             <CheckBox
                 style={{flex: 1, padding: 10}}
@@ -103,7 +105,7 @@ export default class PopularPages extends Component {
         views.push(
             <View key={len - 1}>
                 <View style={styles.items}>
-                    {len % 2 === 0 ? this.renderCheckBox(this.state.dataArray[len - 2]): null}
+                    {len % 2 === 0 ? this.renderCheckBox(this.state.dataArray[len - 2]) : null}
                     {this.renderCheckBox(this.state.dataArray[len - 1])}
                 </View>
                 <View style={styles.line}></View>
@@ -116,7 +118,7 @@ export default class PopularPages extends Component {
     // checkBox点击事件
     onClick(data) {
         // 在标签移除页面，点击是否选中不修改其原本的订阅状态
-        if(!this.isRemoveKey){
+        if (!this.isRemoveKey) {
             data.checked = !data.checked;
         }
         // 记录下用户所做的修改  this.changeValues保存用户所做修改的数组
@@ -130,9 +132,12 @@ export default class PopularPages extends Component {
             this.props.navigator.pop();
             return;
         }
-        // 当用户点击的是移除按钮的时候，遍历用户修改的数组，在this.state.dataArray将其移除
-        for(let i=0,l=this.changeValues.length;i<l;i++){
-            ArrayUtils.remove(this.state.dataArray,this.changeValues[i]);
+
+        if (this.isRemoveKey) {
+            // 当用户点击的是移除按钮的时候，遍历用户修改的数组，在this.state.dataArray将其移除
+            for (let i = 0, l = this.changeValues.length; i < l; i++) {
+                ArrayUtils.remove(this.state.dataArray, this.changeValues[i]);
+            }
         }
 
         // 如果用户做修改，就将用户修改保存到数据库中
@@ -166,8 +171,11 @@ export default class PopularPages extends Component {
 
 
     render() {
-        let title = this.isRemoveKey ? '标签移除' : '自定义标签';
+        let title = this.props.flag === FLAG_LANGUAGE.flag_language ? '自定义语言' : '自定义标签';
+        title = this.isRemoveKey ? '标签移除' : title;
+
         let rightButtonText = this.isRemoveKey ? '移除' : '保存';
+
         return <View style={styles.container}>
             <NavigatorBar
                 title={title}

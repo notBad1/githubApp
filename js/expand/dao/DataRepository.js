@@ -8,7 +8,23 @@ import {
     AsyncStorage
 } from 'react-native';
 
+// 导入GitHubTrending
+import GitHubTrending from 'GitHubTrending'
+// 设置标识，表示是最热模块数据还是趋势模块数据
+export let FLAG_STORYGE = {
+    flag_popular: 'popular',
+    flag_trending: 'trending'
+};
 export default class DataRepository {
+    // flag 传入模块标识 ——表示调用者必须传入标识
+    constructor(flag) {
+        this.flag = flag;
+        // 判断一下，如果标识是trending，我们需要实例化一个GitHubTrending对象
+        if (this.flag === FLAG_STORYGE.flag_trending) {
+            this.trending = new GitHubTrending();
+        }
+    }
+
     // 获取数据方法
     fetchRepository(url) {
         return new Promise((resolve, reject) => {
@@ -65,22 +81,38 @@ export default class DataRepository {
     // 获取网络数据
     fetchNetRepository(url) {
         return new Promise((resolve, reject) => {
-            fetch(url)
-                .then(response => response.json())
-                .then(result => {  //获取网络数据的时候，如果获取成功，我们就在本地缓存一份
-                    // 如果获取的数据为空的话，告诉调用者获取的数据是空的
-                    if (!result) {
-                        reject(new Error('获取的数据是空的'))
-                        return;
-                    }
-                    // 从网络上获取的数据，取出数组
-                    resolve(result.items)
-                    // 将数据保存到数组
-                    this.saveRepository(url, result.items);
-                })
-                .catch(error => {
-                    reject(error)
-                })
+            this.flag === FLAG_STORYGE.flag_popular ? // 判断是popular页面还是Trending页面
+                fetch(url)
+                    .then(response => response.json())
+                    .then(result => {  //获取网络数据的时候，如果获取成功，我们就在本地缓存一份
+                        // 如果获取的数据为空的话，告诉调用者获取的数据是空的
+                        if (!result || !result.items) {
+                            reject(new Error('获取的数据是空的'));
+                            return;
+                        }
+                        // 从网络上获取的数据，取出数组
+                        resolve(result.items);
+                        // 将数据保存到数组
+                        this.saveRepository(url, result.items);
+                    }).done()
+                    .catch(error => {
+                        reject(error)
+                    }) :
+                this.trending.fetchTrending(url)
+                    .then((result) => {
+                        // 如果获取的数据为空的话，告诉调用者获取的数据是空的
+                        if (!result) {
+                            reject(new Error('获取的数据是空的'));
+                            return;
+                        }
+                        // 从网络上获取的数据，取出数组
+                        resolve(result);
+                        // 将数据保存到数组
+                        this.saveRepository(url, result);
+                    })
+                    .catch((error) => {
+                        reject(error)
+                    });
         })
     }
 

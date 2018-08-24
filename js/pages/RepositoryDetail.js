@@ -1,6 +1,7 @@
 /**
  * Created by Administrator on 2018-8-21.
  * 详情页
+ *
  */
 import React, {Component} from 'react';
 import {
@@ -14,11 +15,12 @@ import {
 import NavigatorBar from '../../js/common/navigatorBar'
 import ViewUtil from '../util/ViewUtil'
 
+const TRENDING_URL = 'https://github.com';
 export default class RepositoryDetail extends Component {
     constructor(props) {
         super(props);
-        this.url = this.props.item.html_url;
-        let title = this.props.item.full_name;
+        this.url = this.props.item.html_url ? this.props.item.html_url : TRENDING_URL + this.props.item.url;
+        let title = this.props.item.full_name ? this.props.item.full_name : this.props.item.fullName;
         this.state = {
             url: this.url,
             title: title, //标题
@@ -34,9 +36,9 @@ export default class RepositoryDetail extends Component {
     }
 
     onBack() {
-        if(this.state.canCoBack){
+        if (this.state.canCoBack) {
             this.webView.goBack();
-        }else{
+        } else {
             this.props.navigator.pop();
         }
     }
@@ -45,14 +47,16 @@ export default class RepositoryDetail extends Component {
         return (
             <View style={styles.container}>
                 <NavigatorBar
-                    title= {this.state.title}
+                    title={this.state.title}
                     style={{
                         backgroundColor: '#2196f3'
                     }}
                     statusBar={{
                         backgroundColor: '#2196f3',
                     }}
-                    leftButton={ViewUtil.getLeftButton(()=>{this.onBack()})}
+                    leftButton={ViewUtil.getLeftButton(() => {
+                        this.onBack()
+                    })}
                 />
                 <WebView
                     ref={webView => this.webView = webView}
