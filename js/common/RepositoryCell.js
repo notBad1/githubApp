@@ -36,7 +36,7 @@ export default class RepositoryCell extends Component {
     }
 
     render() {
-        let description = '<p>' + this.props.data.description + '</p>';
+        let description = this.props.flag === 'trending' &&  '<p>' + this.props.data.description + '</p>';
         let favoriteBut = <TouchableOpacity
             onPress={() => {
                 this.onPressfavorite()
@@ -50,7 +50,7 @@ export default class RepositoryCell extends Component {
         >
             <View style={styles.cell_container}>
                 <Text
-                    style={styles.title}>{this.props.flag === 'trending' ? this.props.data.fullName : this.props.data.full_name}</Text>
+                    style={styles.title}>{this.props.flag === 'trending' ? this.props.porjectModel.fullName : this.props.porjectModel.full_name}</Text>
 
                 {
                     this.props.flag === 'trending' ? <HTMLView
@@ -63,7 +63,7 @@ export default class RepositoryCell extends Component {
                         }}
                     /> :
                         <Text
-                            style={styles.text}>{this.props.data.description}</Text>
+                            style={styles.text}>{this.props.porjectModel.description}</Text>
                 }
 
 
@@ -83,7 +83,7 @@ export default class RepositoryCell extends Component {
                                     return <Image style={{height: 22, width: 22}} key={i} source={{uri: array[i]}}/>
                                 }) :
                                 <Image style={{height: 22, width: 22}}
-                                       source={{uri: this.props.data.owner.avatar_url}}/>
+                                       source={{uri: this.props.porjectModel.owner.avatar_url}}/>
                         }
 
                     </View>
@@ -91,7 +91,7 @@ export default class RepositoryCell extends Component {
                         this.props.flag !== 'trending' && <Text style={{
                             color: '#666',
                             fontSize: 14
-                        }}>Star: { this.props.data.stargazers_count}</Text>
+                        }}>Star: { this.props.porjectModel.stargazers_count}</Text>
                     }
 
                     {favoriteBut}

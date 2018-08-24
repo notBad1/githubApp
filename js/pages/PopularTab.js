@@ -13,10 +13,10 @@ import {
 } from 'react-native';
 
 // 导入页面组件
-import DataRepository,{FLAG_STORYGE} from '../expand/dao/DataRepository'
+import DataRepository, {FLAG_STORYGE} from '../expand/dao/DataRepository'
 import RepositoryCell from '../common/RepositoryCell'
 import RepositoryDetail from '../pages/RepositoryDetail'
-
+import ProjectModel from '../model/ProjectModel'
 
 // URL拼接
 const URL = 'https://api.github.com/search/repositories?q=';
@@ -34,6 +34,17 @@ export default class PopularPages extends Component {
         this.dataRepository = new DataRepository(FLAG_STORYGE.flag_popular);
     }
 
+    flushFavoriteState(items) {
+        let result = [];
+        for (let i = 0, l = items.length; i < l; i++) {
+            result.push(new ProjectModel(items[i], false));
+        }
+        this.setState({
+            dataSource: this.state.dataSource.cloneWithRows(result),
+            isLoading: false
+        })
+    }
+
     loadData() {
         // 加载数据的时候刷新
         this.setState({
@@ -44,10 +55,7 @@ export default class PopularPages extends Component {
             .then(result => {
                 // 如果有result且有result.items 就返回result.items 否则就返回result，如果有result就返回result，否则就返回[]
                 let items = result && result.items ? result.items : result ? result : [];
-                this.setState({
-                    dataSource: this.state.dataSource.cloneWithRows(items),
-                    isLoading: false // 数据加载完成停止刷新
-                });
+                this.flushFavoriteState(items);
                 // 对数据进行判断，如果数据时四个小时以前的，我们就从网络上获取新的数据
                 // 如果有result且有result.update_date且result.update_date在四个小时之前
                 if (result && result.update_date && !this.dataRepository.checkDate(result.update_date)) {
@@ -89,17 +97,22 @@ export default class PopularPages extends Component {
         })
     }
 
+    renderRow(porjectModel) {
+        return <RepositoryCell
+            key={porjectModel.item.id}
+            porjectModel={porjectModel.item}
+            isFavorite={porjectModel.isFavorite}
+            onSelected={() => {
+                this.onSelected(porjectModel)
+            }}
+        />
+    }
+
     render() {
         return <View style={styles.container}>
             <ListView
                 dataSource={this.state.dataSource}
-                renderRow={(data) => <RepositoryCell
-                    key={data.id}
-                    data={data}
-                    onSelected={() => {
-                        this.onSelected(data)
-                    }}
-                />}
+                renderRow={(data) => this.renderRow(data)}
                 // 下拉刷新组件
                 refreshControl={
                     <RefreshControl
