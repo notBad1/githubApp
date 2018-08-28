@@ -19,8 +19,8 @@ export default class RepositoryCell extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isFavorite: false, //是否收藏
-            favoriteIcon: require('../../res/images/ic_unstar_transparent.png')
+            isFavorite: this.props.porjectModel.isFavorite, //是否收藏
+            favoriteIcon: this.props.porjectModel.isFavorite ? require('../../res/images/ic_star.png') : require('../../res/images/ic_unstar_transparent.png')
         }
     }
 
@@ -31,12 +31,20 @@ export default class RepositoryCell extends Component {
         })
     }
 
-    onPressfavorite() {
-        this.setFavoriteState(!this.state.isFavorite)
+    componentWillReceiveProps(nextProps) {
+        this.setFavoriteState(nextProps.porjectModel.isFavorite);
     }
 
+    onPressfavorite() {
+        this.setFavoriteState(!this.state.isFavorite);
+        this.props.onFavorite(this.props.porjectModel.item, !this.state.isFavorite);
+    }
+
+
     render() {
-        let description = this.props.flag === 'trending' &&  '<p>' + this.props.data.description + '</p>';
+        let item = this.props.porjectModel.item ? this.props.porjectModel.item : this.props.porjectModel;
+        let flag = this.props.flag;
+        let description = flag === 'trending' && '<p>' + item.description + '</p>';
         let favoriteBut = <TouchableOpacity
             onPress={() => {
                 this.onPressfavorite()
@@ -44,16 +52,17 @@ export default class RepositoryCell extends Component {
         >
             <Image style={{height: 22, width: 22, tintColor: '#2196f3'}}
                    source={this.state.favoriteIcon}/>
-        </TouchableOpacity>
+        </TouchableOpacity>;
+
         return <TouchableOpacity style={styles.container}
                                  onPress={this.props.onSelected}
         >
             <View style={styles.cell_container}>
                 <Text
-                    style={styles.title}>{this.props.flag === 'trending' ? this.props.porjectModel.fullName : this.props.porjectModel.full_name}</Text>
+                    style={styles.title}>{flag === 'trending' ? item.fullName : item.full_name}</Text>
 
                 {
-                    this.props.flag === 'trending' ? <HTMLView
+                    flag === 'trending' ? <HTMLView
                         value={description}
                         onLinkPress={(url) => {
                         }}
@@ -63,12 +72,13 @@ export default class RepositoryCell extends Component {
                         }}
                     /> :
                         <Text
-                            style={styles.text}>{this.props.porjectModel.description}</Text>
+                            style={styles.text}>{item.description}</Text>
                 }
 
 
                 {
-                    this.props.flag === 'trending' && <Text style={styles.text}>Star: {this.props.data.meta}</Text>
+                    flag === 'trending' &&
+                    <Text style={styles.text}>Star: {item.meta}</Text>
                 }
 
                 <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -76,22 +86,22 @@ export default class RepositoryCell extends Component {
                         <Text style={{
                             color: '#333',
                             fontSize: 14
-                        }}>{this.props.flag === 'trending' ? 'Build by' : 'Author'}: </Text>
+                        }}>{flag === 'trending' ? 'Build by' : 'Author'}: </Text>
                         {
-                            this.props.flag === 'trending' ?
-                                this.props.data.contributors.map((item, i, array) => {
+                            flag === 'trending' ?
+                                item.contributors.map((item, i, array) => {
                                     return <Image style={{height: 22, width: 22}} key={i} source={{uri: array[i]}}/>
                                 }) :
                                 <Image style={{height: 22, width: 22}}
-                                       source={{uri: this.props.porjectModel.owner.avatar_url}}/>
+                                       source={{uri: item.owner.avatar_url}}/>
                         }
 
                     </View>
                     {
-                        this.props.flag !== 'trending' && <Text style={{
+                        flag !== 'trending' && <Text style={{
                             color: '#666',
                             fontSize: 14
-                        }}>Star: { this.props.porjectModel.stargazers_count}</Text>
+                        }}>Star: { item.stargazers_count}</Text>
                     }
 
                     {favoriteBut}
