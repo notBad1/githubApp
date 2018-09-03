@@ -112,11 +112,16 @@ export default class PopularPages extends Component {
         this.loadData();
     }
 
-    onSelected(data) {
+    componentWillReceiveProps(nextProps) { // 在props改变的时候调用
+        this.loadData();
+    }
+
+    onSelected(porjectModel) {
         this.props.navigator.push({
             component: RepositoryDetail,
             params: {
-                item: data.item,
+                porjectModel: porjectModel,
+                flag: FLAG_STORYGE.flag_popular,
                 ...this.props
             }
         })

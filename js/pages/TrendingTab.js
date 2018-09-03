@@ -117,6 +117,8 @@ export default class PopularPages extends Component {
     componentWillReceiveProps(nextProps) { // 在props改变的时候调用
         if (nextProps.timeSpan !== this.props.timeSpan) {
             this.loadData(nextProps.timeSpan, true);
+        }else{
+            this.loadData(this.props.timeSpan, true);
         }
     }
 
@@ -126,11 +128,12 @@ export default class PopularPages extends Component {
     }
 
     // 打开详情页
-    onSelected(data) {
+    onSelected(porjectModel) {
         this.props.navigator.push({
             component: RepositoryDetail,
             params: {
-                item: data.item,
+                porjectModel: porjectModel,
+                flag: FLAG_STORYGE.flag_trending,
                 ...this.props
             }
         })
