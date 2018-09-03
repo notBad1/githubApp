@@ -90,4 +90,32 @@ export default class FavoriteDao {
             }
         });
     }
+
+    // 获取用户所收藏的项目
+    getAllItems() {
+        return new Promise((resolve, reject) => {
+            this.getFavoriteKeys()
+                .then((keys) => {
+                    let items = [];// 从数据库中读取的所有项目
+                    if (items) {
+                        AsyncStorage.multiGet(keys, (e, r) => {
+                            try {
+                                r.map((item, i, arr) => {
+                                    items.push(arr[i][1]);
+                                })
+                                resolve(items)
+                            } catch (err) {
+                                reject(err)
+                            }
+                        });
+
+                    } else {
+                        resolve(items)
+                    }
+                })
+                .catch((error) => {
+                    reject(error)
+                })
+        })
+    }
 }
