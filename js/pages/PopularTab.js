@@ -147,7 +147,6 @@ export default class PopularPages extends Component {
 
     render() {
         return <View style={styles.container}>
-            <Text>{this.state.error}</Text>
             <ListView
                 dataSource={this.state.dataSource}
                 renderRow={(data) => this.renderRow(data)}
