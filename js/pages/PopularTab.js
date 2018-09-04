@@ -29,6 +29,7 @@ let favoriteDao = new FavoriteDao(FLAG_STORYGE.flag_popular);
 export default class PopularPages extends Component {
     constructor(props) {
         super(props);
+        this.isFavoriteChange = false; // 监听收藏状态是否改变
         this.state = {
             dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
             error: '',
@@ -110,10 +111,24 @@ export default class PopularPages extends Component {
 
     componentDidMount() {
         this.loadData();
+        // 加载的时候注册监听
+        this.listener = DeviceEventEmitter.addListener('favoriteChange_popular', () => {
+            this.isFavoriteChange = true;
+        })
     }
 
-    componentWillReceiveProps(nextProps) { // 在props改变的时候调用
-        this.loadData();
+    // 组件卸载的时候移除监听
+    componentWillUnmount(){
+        if(this.listener){
+            this.listener.remove();
+        }
+    }
+    // 在props改变的时候调用
+    componentWillReceiveProps(nextProps) {
+        if(this.isFavoriteChange){
+            this.isFavoriteChange = false;
+            this.getFavoriteKeys();
+        }
     }
 
     onSelected(porjectModel) {

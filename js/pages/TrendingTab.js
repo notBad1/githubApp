@@ -29,6 +29,7 @@ let favoriteDao = new FavoriteDao(FLAG_STORYGE.flag_trending);
 export default class PopularPages extends Component {
     constructor(props) {
         super(props);
+        this.isFavoriteChange = false;
         this.state = {
             dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
             error: '',
@@ -112,13 +113,26 @@ export default class PopularPages extends Component {
 
     componentDidMount() { //组件第一次绘制
         this.loadData(this.props.timeSpan, true);
+        // 加载的时候注册监听
+        this.listener = DeviceEventEmitter.addListener('favoriteChange_trending', () => {
+            this.isFavoriteChange = true;
+        })
     }
 
     componentWillReceiveProps(nextProps) { // 在props改变的时候调用
         if (nextProps.timeSpan !== this.props.timeSpan) {
             this.loadData(nextProps.timeSpan, true);
-        }else{
-            this.loadData(this.props.timeSpan, true);
+        }
+        if (this.isFavoriteChange) {
+            this.isFavoriteChange = false;
+            this.getFavoriteKeys();
+        }
+    }
+
+    // 组件卸载的时候移除监听
+    componentWillUnmount() {
+        if (this.listener) {
+            this.listener.remove();
         }
     }
 
@@ -149,7 +163,7 @@ export default class PopularPages extends Component {
     }
 
     renderRow(porjectModel) {
-        return <RepositoryCell
+        return porjectModel ? <RepositoryCell
             key={porjectModel.item.fullName}
             porjectModel={porjectModel}
             flag="trending"
@@ -159,7 +173,7 @@ export default class PopularPages extends Component {
             onFavorite={(item, isFavorite) => {
                 this.onFavorite(item, isFavorite)
             }}
-        />
+        /> : null
     }
 
     render() {

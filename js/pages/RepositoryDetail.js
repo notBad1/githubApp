@@ -16,6 +16,7 @@ import {
 
 import NavigatorBar from '../../js/common/navigatorBar'
 import ViewUtil from '../util/ViewUtil'
+import ArrayUtils from '../util/ArrayUtils'
 import FavoriteDao from '../../js/expand/dao/FavoriteDao'
 
 const TRENDING_URL = 'https://github.com';
@@ -26,6 +27,7 @@ export default class RepositoryDetail extends Component {
         this.url = this.props.porjectModel.item.html_url ? this.props.porjectModel.item.html_url : TRENDING_URL + this.props.porjectModel.item.url;
         let title = this.props.porjectModel.item.full_name ? this.props.porjectModel.item.full_name : this.props.porjectModel.item.fullName;
         this.favoriteDao = new FavoriteDao(this.props.flag);
+        this.unFavorite = [];
         this.state = {
             url: this.url,
             title: title, //标题
@@ -38,7 +40,6 @@ export default class RepositoryDetail extends Component {
     onNavigationStateChange(navState) {
         this.setState({
             canCoBack: navState.canGoBack,
-            // title: navState.title
         });
     }
 
@@ -70,6 +71,15 @@ export default class RepositoryDetail extends Component {
             this.favoriteDao.saveFavoriteItem(key, JSON.stringify(porjectModel.item))
         } else {
             this.favoriteDao.removeFavoriteItem(key)
+        }
+        // 将用户是否操作的项目
+        ArrayUtils.updateArray(porjectModel.item, this.unFavorite);
+        if (this.unFavorite.length > 0) {
+            if (this.props.flag === 'popular') {
+                DeviceEventEmitter.emit('favoriteChange_popular')
+            } else {
+                DeviceEventEmitter.emit('favoriteChange_trending')
+            }
         }
     }
 

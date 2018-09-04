@@ -9,8 +9,7 @@ import {
     View,
     ListView,
     RefreshControl,
-    AsyncStorage,
-    DeviceEventEmitter
+    DeviceEventEmitter,
 } from 'react-native';
 
 // 导入页面组件
@@ -18,67 +17,45 @@ import RepositoryCell from '../common/RepositoryCell'
 import RepositoryDetail from '../pages/RepositoryDetail'
 import ProjectModel from '../model/ProjectModel'
 import FavoriteDao from '../expand/dao/FavoriteDao'
-import Utils from '../util/Utils'
+import ArrayUtils from '../util/ArrayUtils'
 
-const FAVORITE_KEY_PREFIX = 'favorite_';
 export default class PopularPages extends Component {
     constructor(props) {
         super(props);
         this.favoriteDao = new FavoriteDao(this.props.name);
+        this.unFavorite = [];
         this.state = {
             dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
             error: '',
             isLoading: false,
-            favoriteKeys: [],
+            favoriteKeys: []
         };
     }
 
-    // 更新 每一项收藏时的状态
-    flushFavoriteState() {
-        let projectModels = [];
-        let items = this.items;
-        for (let i = 0, l = items.length; i < l; i++) {
-            projectModels.push(new ProjectModel(items[i], Utils.checkFavorite(items[i], this.state.favoriteKeys)));
+    componentDidMount() {
+        this.loadData(true);
+    }
+
+    componentWillReceiveProps(nextProps) { // 在props改变的时候调用
+        this.loadData(false);
+    }
+
+
+    loadData(isLoad) {
+        if (isLoad) {
+            // 加载数据的时候刷新
+            this.updateSetState({
+                isLoading: true
+            });
         }
-        this.updateSetState({
-            dataSource: this.state.dataSource.cloneWithRows(projectModels),
-            isLoading: false
-        })
-    }
-
-
-    // 获取用户收藏的key集合
-    getFavoriteKeys() {
-        this.favoriteDao.getFavoriteKeys()
-            .then((result) => {
-                if (result) {
-                    this.updateSetState({
-                        favoriteKeys: result
-                    })
-                }
-                this.flushFavoriteState()
-            })
-            .catch((error) => {
-                this.flushFavoriteState()
-            })
-    }
-
-
-    // 封装setState方法
-    updateSetState(dic) {
-        if (!this) return;
-        this.setState(dic);
-    }
-
-    loadData() {
-        // 加载数据的时候刷新
-        this.setState({
-            isLoading: true
-        });
         this.favoriteDao.getAllItems()
             .then((result) => {
+                let resultData = [];
+                for (let i = 0, len = result.length; i < len; i++) {
+                    resultData.push(new ProjectModel(result[i], true))
+                }
                 this.updateSetState({
-                    dataSource: this.state.dataSource.cloneWithRows(result),
+                    dataSource: this.getDataSource(resultData),
                     isLoading: false
                 })
             })
@@ -90,12 +67,15 @@ export default class PopularPages extends Component {
             })
     }
 
-    componentDidMount() {
-        this.loadData();
+    // 封装setState方法
+    updateSetState(dic) {
+        if (!this) return;
+        this.setState(dic);
     }
 
-    componentWillReceiveProps(nextProps) { // 在props改变的时候调用
-        this.loadData();
+    //封装dataSource
+    getDataSource(items) {
+        return this.state.dataSource.cloneWithRows(items);
     }
 
     onSelected(porjectModel) {
@@ -103,7 +83,7 @@ export default class PopularPages extends Component {
             component: RepositoryDetail,
             params: {
                 porjectModel: porjectModel,
-                flag: FLAG_STORYGE.flag_popular,
+                flag: this.props.name,
                 ...this.props
             }
         })
@@ -111,10 +91,21 @@ export default class PopularPages extends Component {
 
     //收藏按钮的点击回调函数
     onFavorite(item, isFavorite) {
+        let key = item.id ? item.id.toString() : item.fullName.toString();
         if (isFavorite) {
-            favoriteDao.saveFavoriteItem(item.id.toString(), JSON.stringify(item))
+            this.favoriteDao.saveFavoriteItem(key, JSON.stringify(item))
         } else {
-            favoriteDao.removeFavoriteItem(item.id.toString())
+            this.favoriteDao.removeFavoriteItem(key)
+        }
+        // 在收藏页面取消项目收藏的话，通过DeviceEventEmitter给当前操作项目所在模块发送通知
+        // 将用户操作的项目保存到数组中
+        ArrayUtils.updateArray(item, this.unFavorite);
+        if (this.unFavorite.length > 0) {
+            if (this.props.name === 'popular') {
+                DeviceEventEmitter.emit('favoriteChange_popular')
+            } else {
+                DeviceEventEmitter.emit('favoriteChange_trending')
+            }
         }
     }
 
@@ -123,7 +114,7 @@ export default class PopularPages extends Component {
         return <RepositoryCell
             key={key}
             porjectModel={porjectModel}
-            flag="popular"
+            flag={this.props.name}
             onSelected={() => {
                 this.onSelected(porjectModel)
             }}
@@ -137,7 +128,7 @@ export default class PopularPages extends Component {
         return <View style={styles.container}>
             <ListView
                 dataSource={this.state.dataSource}
-                renderRow={(porjectModel) => this.renderRow(porjectModel)}
+                renderRow={(data) => this.renderRow(data)}
                 // 下拉刷新组件
                 refreshControl={
                     <RefreshControl

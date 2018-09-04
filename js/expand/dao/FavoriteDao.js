@@ -101,8 +101,8 @@ export default class FavoriteDao {
                         AsyncStorage.multiGet(keys, (e, r) => {
                             try {
                                 r.map((item, i, arr) => {
-                                    items.push(arr[i][1]);
-                                })
+                                    items.push(JSON.parse(arr[i][1]));
+                                });
                                 resolve(items)
                             } catch (err) {
                                 reject(err)
