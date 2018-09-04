@@ -7,7 +7,9 @@ import {
     View,
     Text,
     Image,
-    TouchableOpacity
+    TouchableOpacity,
+    TouchableHighlight,
+    StyleSheet
 } from 'react-native';
 
 export default class ViewUtil {
@@ -22,7 +24,7 @@ export default class ViewUtil {
     }
 
     // 导航栏右侧菜单
-    static getRightButton(text,callback) {
+    static getRightButton(text, callback) {
         return <TouchableOpacity style={{padding: 8}}
                                  onPress={callback}
         >
@@ -31,4 +33,48 @@ export default class ViewUtil {
             </View>
         </TouchableOpacity>
     }
+
+    /**
+     * 导出我的页面中功能列表 Item
+     * @param callback  点击item回调函数
+     * @param icon 左侧图标
+     * @param text 文本
+     * @param tintStyle 图标颜色
+     * @param expandableIcon 右侧图标
+     * @returns {XML}
+     */
+    static getSetingItem(callback, icon, text, tintStyle, expandableIcon) {
+        return <TouchableHighlight
+            onPress={callback}
+        >
+            <View style={styles.item}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Image source={icon}
+                           style={[{width: 26, height: 26, marginRight: 10}, {tintColor: tintStyle}]}
+                    />
+                    <Text style={styles.text}>{text}</Text>
+                </View>
+                <Image source={expandableIcon ? expandableIcon : require('../../res/images/ic_tiaozhuan.png')}
+                       style={[{width: 30, height: 30}, {tintColor: tintStyle}]}
+                />
+            </View>
+        </TouchableHighlight>
+    }
 }
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    item: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: '#fff',
+        paddingHorizontal: 10,
+        paddingVertical: 15
+    },
+    text: {
+        color: '#333',
+        fontSize: 16
+    }
+});
