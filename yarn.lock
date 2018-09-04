@@ -3885,6 +3885,10 @@ react-native-htmlview@^0.5.0:
   version "0.5.0"
   resolved "http://registry.npm.taobao.org/react-native-htmlview/download/react-native-htmlview-0.5.0.tgz#1f5fa3396259c1ae031804bf2589f6311e54c0a7"
 
+react-native-parallax-scroll-view@^0.19.0:
+  version "0.19.0"
+  resolved "http://registry.npm.taobao.org/react-native-parallax-scroll-view/download/react-native-parallax-scroll-view-0.19.0.tgz#23b9af1f13249a610f4641e2582a58997df7d80a"
+
 react-native-scrollable-tab-view@^0.7.0:
   version "0.7.4"
   resolved "http://registry.npm.taobao.org/react-native-scrollable-tab-view/download/react-native-scrollable-tab-view-0.7.4.tgz#623a047cbfab35a27b8689095af524e9aac74b62"
