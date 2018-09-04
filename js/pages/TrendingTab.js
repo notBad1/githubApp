@@ -163,17 +163,21 @@ export default class PopularPages extends Component {
     }
 
     renderRow(porjectModel) {
-        return porjectModel ? <RepositoryCell
-            key={porjectModel.item.fullName}
-            porjectModel={porjectModel}
-            flag="trending"
-            onSelected={() => {
-                this.onSelected(porjectModel)
-            }}
-            onFavorite={(item, isFavorite) => {
-                this.onFavorite(item, isFavorite)
-            }}
-        /> : null
+        if (porjectModel) {
+            return <RepositoryCell
+                key={porjectModel.item.fullName}
+                porjectModel={porjectModel}
+                flag="trending"
+                onSelected={() => {
+                    this.onSelected(porjectModel)
+                }}
+                onFavorite={(item, isFavorite) => {
+                    this.onFavorite(item, isFavorite)
+                }}
+            />
+        } else {
+            return null
+        }
     }
 
     render() {
