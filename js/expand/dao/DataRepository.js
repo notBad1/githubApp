@@ -13,7 +13,8 @@ import GitHubTrending from 'GitHubTrending'
 // 设置标识，表示是最热模块数据还是趋势模块数据
 export let FLAG_STORYGE = {
     flag_popular: 'popular',
-    flag_trending: 'trending'
+    flag_trending: 'trending',
+    flag_my: 'my'
 };
 export default class DataRepository {
     // flag 传入模块标识 ——表示调用者必须传入标识
@@ -81,20 +82,21 @@ export default class DataRepository {
     // 获取网络数据
     fetchNetRepository(url) {
         return new Promise((resolve, reject) => {
-            this.flag === FLAG_STORYGE.flag_popular ? // 判断是popular页面还是Trending页面
+            this.flag !== FLAG_STORYGE.flag_trending ?
                 fetch(url)
                     .then(response => response.json())
                     .then(result => {  //获取网络数据的时候，如果获取成功，我们就在本地缓存一份
-                        // 如果获取的数据为空的话，告诉调用者获取的数据是空的
-                        if (!result || !result.items) {
+                        // 判断是关于页面并且数据不为空
+                        if (this.flag === FLAG_STORYGE.flag_my && result) {
+                            this.saveRepository(url, result);
+                            resolve(result);
+                        } else if (result && result.items) {
+                            this.saveRepository(url, result.items);
+                            resolve(result.items);
+                        } else {
                             reject(new Error('获取的数据是空的'));
-                            return;
                         }
-                        // 从网络上获取的数据，取出数组
-                        resolve(result.items);
-                        // 将数据保存到数组
-                        this.saveRepository(url, result.items);
-                    }).done()
+                    })
                     .catch(error => {
                         reject(error)
                     }) :
@@ -121,10 +123,18 @@ export default class DataRepository {
     saveRepository(url, data, callBack) {
         if (!url || !data)return;// 如果url为空，或者data为空，就不保存
         // 包装数据
-        let wrapData = {
-            items: data, // 数据
-            update_date: new Date().getTime()//更新日期，获取当天时间
-        };
+        let wrapData;
+        if (this.flag === FLAG_STORYGE.flag_my) {
+            wrapData = {
+                item: data, // 数据
+                update_date: new Date().getTime()//更新日期，获取当天时间
+            };
+        } else {
+            wrapData = {
+                items: data, // 数据
+                update_date: new Date().getTime()//更新日期，获取当天时间
+            };
+        }
         // 将数据保存到数据库中，将数据序列化
         AsyncStorage.setItem(url, JSON.stringify(wrapData), callBack)
     }

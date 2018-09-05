@@ -24,16 +24,16 @@ const TRENDING_URL = 'https://github.com';
 export default class RepositoryDetail extends Component {
     constructor(props) {
         super(props);
-        this.url = this.props.porjectModel.item.html_url ? this.props.porjectModel.item.html_url : TRENDING_URL + this.props.porjectModel.item.url;
-        let title = this.props.porjectModel.item.full_name ? this.props.porjectModel.item.full_name : this.props.porjectModel.item.fullName;
+        this.url = this.props.projectModel.item.html_url ? this.props.projectModel.item.html_url : TRENDING_URL + this.props.projectModel.item.url;
+        let title = this.props.projectModel.item.full_name ? this.props.projectModel.item.full_name : this.props.projectModel.item.fullName;
         this.favoriteDao = new FavoriteDao(this.props.flag);
         this.unFavorite = [];
         this.state = {
             url: this.url,
             title: title, //标题
             canCoBack: false, // 是否可以返回
-            isFavorite: this.props.porjectModel.isFavorite, //是否收藏
-            favoriteIcon: this.props.porjectModel.isFavorite ? require('../../res/images/ic_star.png') : require('../../res/images/ic_star_navbar.png')
+            isFavorite: this.props.projectModel.isFavorite, //是否收藏
+            favoriteIcon: this.props.projectModel.isFavorite ? require('../../res/images/ic_star.png') : require('../../res/images/ic_star_navbar.png')
         };
     }
 
@@ -60,20 +60,20 @@ export default class RepositoryDetail extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setFavoriteState(nextProps.porjectModel.isFavorite);
+        this.setFavoriteState(nextProps.projectModel.isFavorite);
     }
 
     onPressfavorite() {
         this.setFavoriteState(!this.state.isFavorite);
-        let porjectModel = this.props.porjectModel;
-        let key = porjectModel.item.id ? porjectModel.item.id.toString() : porjectModel.item.fullName.toString();
+        let projectModel = this.props.projectModel;
+        let key = projectModel.item.id ? projectModel.item.id.toString() : projectModel.item.fullName.toString();
         if (!this.state.isFavorite) {
-            this.favoriteDao.saveFavoriteItem(key, JSON.stringify(porjectModel.item))
+            this.favoriteDao.saveFavoriteItem(key, JSON.stringify(projectModel.item))
         } else {
             this.favoriteDao.removeFavoriteItem(key)
         }
         // 将用户是否操作的项目
-        ArrayUtils.updateArray(porjectModel.item, this.unFavorite);
+        ArrayUtils.updateArray(projectModel.item, this.unFavorite);
         if (this.unFavorite.length > 0) {
             if (this.props.flag === 'popular') {
                 DeviceEventEmitter.emit('favoriteChange_popular')

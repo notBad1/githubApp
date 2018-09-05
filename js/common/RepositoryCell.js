@@ -19,8 +19,8 @@ export default class RepositoryCell extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isFavorite: this.props.porjectModel.isFavorite, //是否收藏
-            favoriteIcon: this.props.porjectModel.isFavorite ? require('../../res/images/ic_star.png') : require('../../res/images/ic_unstar_transparent.png')
+            isFavorite: this.props.projectModel.isFavorite, //是否收藏
+            favoriteIcon: this.props.projectModel.isFavorite ? require('../../res/images/ic_star.png') : require('../../res/images/ic_unstar_transparent.png')
         }
     }
 
@@ -32,17 +32,17 @@ export default class RepositoryCell extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setFavoriteState(nextProps.porjectModel.isFavorite);
+        this.setFavoriteState(nextProps.projectModel.isFavorite);
     }
 
     onPressfavorite() {
         this.setFavoriteState(!this.state.isFavorite);
-        this.props.onFavorite(this.props.porjectModel.item, !this.state.isFavorite);
+        this.props.onFavorite(this.props.projectModel.item, !this.state.isFavorite);
     }
 
 
     render() {
-        let item = this.props.porjectModel.item ? this.props.porjectModel.item : this.props.porjectModel;
+        let item = this.props.projectModel.item ? this.props.projectModel.item : this.props.projectModel;
         let flag = this.props.flag;
         let description = flag === 'trending' && '<p>' + item.description + '</p>';
         let favoriteBut = <TouchableOpacity

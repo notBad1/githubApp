@@ -142,11 +142,11 @@ export default class PopularPages extends Component {
     }
 
     // 打开详情页
-    onSelected(porjectModel) {
+    onSelected(projectModel) {
         this.props.navigator.push({
             component: RepositoryDetail,
             params: {
-                porjectModel: porjectModel,
+                projectModel: projectModel,
                 flag: FLAG_STORYGE.flag_trending,
                 ...this.props
             }
@@ -162,14 +162,14 @@ export default class PopularPages extends Component {
         }
     }
 
-    renderRow(porjectModel) {
-        if (porjectModel) {
+    renderRow(projectModel) {
+        if (projectModel) {
             return <RepositoryCell
-                key={porjectModel.item.fullName}
-                porjectModel={porjectModel}
+                key={projectModel.item.fullName}
+                projectModel={projectModel}
                 flag="trending"
                 onSelected={() => {
-                    this.onSelected(porjectModel)
+                    this.onSelected(projectModel)
                 }}
                 onFavorite={(item, isFavorite) => {
                     this.onFavorite(item, isFavorite)

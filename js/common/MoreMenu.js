@@ -11,5 +11,7 @@ export const MORE_MENU = {
     Remove_Key: 'Remove Key',
     About_Author: 'About Author',
     Custom_Theme: 'Custom Theme',
-    About: 'About'
-}
+    About: 'About',
+    WebSite: 'Web Site',
+    FeedBack: 'Feed Back'
+};

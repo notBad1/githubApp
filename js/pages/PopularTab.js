@@ -131,11 +131,11 @@ export default class PopularPages extends Component {
         }
     }
 
-    onSelected(porjectModel) {
+    onSelected(projectModel) {
         this.props.navigator.push({
             component: RepositoryDetail,
             params: {
-                porjectModel: porjectModel,
+                projectModel: projectModel,
                 flag: FLAG_STORYGE.flag_popular,
                 ...this.props
             }
@@ -151,13 +151,13 @@ export default class PopularPages extends Component {
         }
     }
 
-    renderRow(porjectModel) {
+    renderRow(projectModel) {
         return <RepositoryCell
-            key={porjectModel.item.id}
-            porjectModel={porjectModel}
+            key={projectModel.item.id}
+            projectModel={projectModel}
             flag="popular"
             onSelected={() => {
-                this.onSelected(porjectModel)
+                this.onSelected(projectModel)
             }}
             onFavorite={(item, isFavorite) => {
                 this.onFavorite(item, isFavorite)
