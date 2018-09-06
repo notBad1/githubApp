@@ -97,7 +97,7 @@ export default class FavoriteDao {
             this.getFavoriteKeys()
                 .then((keys) => {
                     let items = [];// 从数据库中读取的所有项目
-                    if (items) {
+                    if (keys) {
                         AsyncStorage.multiGet(keys, (e, r) => {
                             try {
                                 r.map((item, i, arr) => {

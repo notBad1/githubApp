@@ -78,11 +78,11 @@ export default class PopularPages extends Component {
         return this.state.dataSource.cloneWithRows(items);
     }
 
-    onSelected(porjectModel) {
+    onSelected(projectModel) {
         this.props.navigator.push({
             component: RepositoryDetail,
             params: {
-                porjectModel: porjectModel,
+                projectModel: projectModel,
                 flag: this.props.name,
                 ...this.props
             }
@@ -109,14 +109,14 @@ export default class PopularPages extends Component {
         }
     }
 
-    renderRow(porjectModel) {
-        let key = porjectModel.item.id ? porjectModel.item.id : porjectModel.item.fullName;
+    renderRow(projectModel) {
+        let key = projectModel.item.id ? projectModel.item.id : projectModel.item.fullName;
         return <RepositoryCell
             key={key}
-            porjectModel={porjectModel}
+            projectModel={projectModel}
             flag={this.props.name}
             onSelected={() => {
-                this.onSelected(porjectModel)
+                this.onSelected(projectModel)
             }}
             onFavorite={(item, isFavorite) => {
                 this.onFavorite(item, isFavorite)
