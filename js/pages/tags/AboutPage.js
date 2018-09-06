@@ -26,7 +26,8 @@ export default class AboutPage extends Component {
         super(props);
         this.aboutCommon = new AboutCommon(props, (dic) => this.updataState(dic), FLAG_ABOUT.flag_about, config);
         this.state = {
-            projectModels: []
+            projectModels: [],
+            author: config.author,
         };
     }
 
@@ -100,8 +101,8 @@ export default class AboutPage extends Component {
             {
                 'name': 'GitHub Popular',
                 'description': '这是一个用来查看GitHub最受欢迎与最热项目的APP，它基于react Native支持android和ios双平台',
-                'avator': 'https://avatar.csdn.net/8/6/F/1_notbad_.jpg',
-                'backgroundImage': 'http://t2.hddhhn.com/uploads/tu/201801/9999/c63fb8c291.jpg'
+                'avator': this.state.author.avator1,
+                'backgroundImage': this.state.author.backgroundImage1
             }
         )
     }

@@ -49,9 +49,12 @@ export default class ViewUtil {
         >
             <View style={styles.item}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Image source={icon}
-                           style={[{width: 26, height: 26, marginRight: 10}, {tintColor: tintStyle}]}
-                    />
+                    {
+                        icon ? <Image source={icon}
+                                      style={[{width: 26, height: 26, marginRight: 10}, {tintColor: tintStyle}]}
+                        /> : <Text style={{paddingRight: 25}}/>
+                    }
+
                     <Text style={styles.text}>{text}</Text>
                 </View>
                 <Image source={expandableIcon ? expandableIcon : require('../../res/images/ic_tiaozhuan.png')}

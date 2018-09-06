@@ -10,12 +10,13 @@ import {
 import DataRepository, {FLAG_STORYGE} from './DataRepository'
 import Utils from '../../util/Utils'
 
-let itemMap = new Map();// 保存取出的数据
+
 
 export default class RepositoryUtils {
     constructor(aboutCommon) {
         this.aboutCommon = aboutCommon;
-        this.dataRepository = new DataRepository(FLAG_STORYGE.flag_my)
+        this.dataRepository = new DataRepository(FLAG_STORYGE.flag_my);
+        this.itemMap = new Map();// 保存取出的数据
     }
 
     /**
@@ -24,9 +25,9 @@ export default class RepositoryUtils {
      * @param v
      */
     updateData(k, v) {
-        itemMap.set(k, v);
+        this.itemMap.set(k, v);
         let arr = [];
-        for (let val of itemMap.values()) {
+        for (let val of this.itemMap.values()) {
             arr.push(val)
         }
         // 通知aboutCommon组件，数据发生改变
