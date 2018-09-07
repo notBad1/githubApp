@@ -40,8 +40,8 @@ export default class PopularPages extends Component {
                 tabBarUnderlineStyle={{backgroundColor: '#e7e7e7', height: 2}}
                 renderTabBar={() => <ScrollableTabBar />}
             >
-                <FavoriteTab tabLabel='最热' name="popular" {...this.props}/>
-                <FavoriteTab tabLabel='趋势' name="trending" {...this.props}/>
+                <FavoriteTab tabLabel='最热' flag="popular" {...this.props}/>
+                <FavoriteTab tabLabel='趋势' flag="trending" {...this.props}/>
             </ScrollableTabView>
         </View>
     }

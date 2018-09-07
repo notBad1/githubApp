@@ -15,6 +15,7 @@ import {
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import ViewUtil from '../../util/ViewUtil'
 import Utils from '../../util/Utils'
+import ActionUtils from '../../util/ActionUtils'
 import FavoriteDao from '../../expand/dao/FavoriteDao'
 import {FLAG_STORYGE} from '../../expand/dao/DataRepository'
 import RepositoryUtils from '../../expand/dao/RepositoryUtils'
@@ -85,17 +86,6 @@ export default class AboutCommon {
         })
     }
 
-    onSelected(projectModel) {
-        this.props.navigator.push({
-            component: RepositoryDetail,
-            params: {
-                projectModel: projectModel,
-                flag: FLAG_STORYGE.flag_popular,
-                ...this.props
-            }
-        })
-    }
-
     componentDidMount() {
         if (this.flag_about === FLAG_ABOUT.flag_about) {
             this.repositoryUtils.fetchRepository(this.config.info.currentRepoUrl)
@@ -135,7 +125,11 @@ export default class AboutCommon {
                     projectModel={projectModel}
                     flag="popular"
                     onSelected={() => {
-                        this.onSelected(projectModel)
+                        ActionUtils.onSelected({
+                            projectModel: projectModel,
+                            flag: FLAG_STORYGE.flag_popular,
+                            ...this.props
+                        })
                     }}
                     onFavorite={(item, isFavorite) => {
                         this.onFavorite(item, isFavorite)

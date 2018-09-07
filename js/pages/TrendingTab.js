@@ -19,6 +19,7 @@ import RepositoryDetail from '../pages/RepositoryDetail'
 import ProjectModel from '../model/ProjectModel'
 import FavoriteDao from '../expand/dao/FavoriteDao'
 import Utils from '../util/Utils'
+import ActionUtils from '../util/ActionUtils'
 
 
 // URL拼接
@@ -141,18 +142,6 @@ export default class PopularPages extends Component {
         this.loadData(this.props.timeSpan, true);
     }
 
-    // 打开详情页
-    onSelected(projectModel) {
-        this.props.navigator.push({
-            component: RepositoryDetail,
-            params: {
-                projectModel: projectModel,
-                flag: FLAG_STORYGE.flag_trending,
-                ...this.props
-            }
-        })
-    }
-
     //收藏按钮的点击回调函数
     onFavorite(item, isFavorite) {
         if (isFavorite) {
@@ -169,7 +158,11 @@ export default class PopularPages extends Component {
                 projectModel={projectModel}
                 flag="trending"
                 onSelected={() => {
-                    this.onSelected(projectModel)
+                    ActionUtils.onSelected({
+                        projectModel: projectModel,
+                        flag: FLAG_STORYGE.flag_trending,
+                        ...this.props
+                    })
                 }}
                 onFavorite={(item, isFavorite) => {
                     this.onFavorite(item, isFavorite)

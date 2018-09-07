@@ -18,11 +18,12 @@ import RepositoryDetail from '../pages/RepositoryDetail'
 import ProjectModel from '../model/ProjectModel'
 import FavoriteDao from '../expand/dao/FavoriteDao'
 import ArrayUtils from '../util/ArrayUtils'
+import ActionUtils from '../util/ActionUtils'
 
 export default class PopularPages extends Component {
     constructor(props) {
         super(props);
-        this.favoriteDao = new FavoriteDao(this.props.name);
+        this.favoriteDao = new FavoriteDao(this.props.flag);
         this.unFavorite = [];
         this.state = {
             dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
@@ -78,17 +79,6 @@ export default class PopularPages extends Component {
         return this.state.dataSource.cloneWithRows(items);
     }
 
-    onSelected(projectModel) {
-        this.props.navigator.push({
-            component: RepositoryDetail,
-            params: {
-                projectModel: projectModel,
-                flag: this.props.name,
-                ...this.props
-            }
-        })
-    }
-
     //收藏按钮的点击回调函数
     onFavorite(item, isFavorite) {
         let key = item.id ? item.id.toString() : item.fullName.toString();
@@ -101,7 +91,7 @@ export default class PopularPages extends Component {
         // 将用户操作的项目保存到数组中
         ArrayUtils.updateArray(item, this.unFavorite);
         if (this.unFavorite.length > 0) {
-            if (this.props.name === 'popular') {
+            if (this.props.flag === 'popular') {
                 DeviceEventEmitter.emit('favoriteChange_popular')
             } else {
                 DeviceEventEmitter.emit('favoriteChange_trending')
@@ -110,13 +100,18 @@ export default class PopularPages extends Component {
     }
 
     renderRow(projectModel) {
+        if (!projectModel) return null;
         let key = projectModel.item.id ? projectModel.item.id : projectModel.item.fullName;
         return <RepositoryCell
             key={key}
             projectModel={projectModel}
-            flag={this.props.name}
+            flag={this.props.flag}
             onSelected={() => {
-                this.onSelected(projectModel)
+                ActionUtils.onSelected({
+                    projectModel: projectModel,
+                    flag: this.props.flag,
+                    ...this.props
+                })
             }}
             onFavorite={(item, isFavorite) => {
                 this.onFavorite(item, isFavorite)

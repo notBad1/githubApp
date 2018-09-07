@@ -19,6 +19,7 @@ import RepositoryDetail from '../pages/RepositoryDetail'
 import ProjectModel from '../model/ProjectModel'
 import FavoriteDao from '../expand/dao/FavoriteDao'
 import Utils from '../util/Utils'
+import ActionUtils from '../util/ActionUtils'
 
 // URL拼接
 const URL = 'https://api.github.com/search/repositories?q=';
@@ -118,28 +119,18 @@ export default class PopularPages extends Component {
     }
 
     // 组件卸载的时候移除监听
-    componentWillUnmount(){
-        if(this.listener){
+    componentWillUnmount() {
+        if (this.listener) {
             this.listener.remove();
         }
     }
+
     // 在props改变的时候调用
     componentWillReceiveProps(nextProps) {
-        if(this.isFavoriteChange){
+        if (this.isFavoriteChange) {
             this.isFavoriteChange = false;
             this.getFavoriteKeys();
         }
-    }
-
-    onSelected(projectModel) {
-        this.props.navigator.push({
-            component: RepositoryDetail,
-            params: {
-                projectModel: projectModel,
-                flag: FLAG_STORYGE.flag_popular,
-                ...this.props
-            }
-        })
     }
 
     //收藏按钮的点击回调函数
@@ -157,7 +148,11 @@ export default class PopularPages extends Component {
             projectModel={projectModel}
             flag="popular"
             onSelected={() => {
-                this.onSelected(projectModel)
+                ActionUtils.onSelected({
+                    projectModel: projectModel,
+                    flag: FLAG_STORYGE.flag_popular,
+                    ...this.props
+                })
             }}
             onFavorite={(item, isFavorite) => {
                 this.onFavorite(item, isFavorite)
