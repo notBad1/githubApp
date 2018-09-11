@@ -142,14 +142,6 @@ export default class PopularPages extends Component {
         this.loadData(this.props.timeSpan, true);
     }
 
-    //收藏按钮的点击回调函数
-    onFavorite(item, isFavorite) {
-        if (isFavorite) {
-            favoriteDao.saveFavoriteItem(item.fullName.toString(), JSON.stringify(item))
-        } else {
-            favoriteDao.removeFavoriteItem(item.fullName.toString())
-        }
-    }
 
     renderRow(projectModel) {
         if (projectModel) {
@@ -165,7 +157,7 @@ export default class PopularPages extends Component {
                     })
                 }}
                 onFavorite={(item, isFavorite) => {
-                    this.onFavorite(item, isFavorite)
+                    ActionUtils.onFavorite(item, isFavorite,favoriteDao)
                 }}
             />
         } else {

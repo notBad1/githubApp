@@ -19,4 +19,14 @@ export default class ActionUtils {
             }
         })
     }
+
+    //收藏按钮的点击回调函数
+    static onFavorite(item, isFavorite, favoriteDao) {
+        let key = item.id ? item.id.toString() : item.fullName.toString();
+        if (isFavorite) {
+            favoriteDao.saveFavoriteItem(key, JSON.stringify(item))
+        } else {
+            favoriteDao.removeFavoriteItem(key)
+        }
+    }
 }

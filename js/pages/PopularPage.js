@@ -16,6 +16,7 @@ import ScrollableTabView, {ScrollableTabBar,} from 'react-native-scrollable-tab-
 // 导入页面组件
 import NavigatorBar from '../common/navigatorBar'
 import PopularTab from './PopularTab'
+import SearchPage from './SearchPage'
 // 弹出框
 import Popover from '../common/Popover'
 import KeyView from '../model/KeyView'
@@ -47,7 +48,12 @@ export default class PopularPages extends Component {
     }
 
     onSeach() {
-
+        this.props.navigator.push({
+            component: SearchPage,
+            params: {
+                ...this.props,
+            }
+        })
     }
 
     // 组件刚完成初始化

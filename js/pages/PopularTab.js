@@ -15,7 +15,7 @@ import {
 // 导入页面组件
 import DataRepository, {FLAG_STORYGE} from '../expand/dao/DataRepository'
 import RepositoryCell from '../common/RepositoryCell'
-import RepositoryDetail from '../pages/RepositoryDetail'
+// import RepositoryDetail from '../pages/RepositoryDetail'
 import ProjectModel from '../model/ProjectModel'
 import FavoriteDao from '../expand/dao/FavoriteDao'
 import Utils from '../util/Utils'
@@ -80,7 +80,7 @@ export default class PopularPages extends Component {
 
     loadData() {
         // 加载数据的时候刷新
-        this.setState({
+        this.updateSetState({
             isLoading: true
         });
         let url = URL + this.props.tabLabel;
@@ -133,14 +133,6 @@ export default class PopularPages extends Component {
         }
     }
 
-    //收藏按钮的点击回调函数
-    onFavorite(item, isFavorite) {
-        if (isFavorite) {
-            favoriteDao.saveFavoriteItem(item.id.toString(), JSON.stringify(item))
-        } else {
-            favoriteDao.removeFavoriteItem(item.id.toString())
-        }
-    }
 
     renderRow(projectModel) {
         return <RepositoryCell
@@ -155,7 +147,7 @@ export default class PopularPages extends Component {
                 })
             }}
             onFavorite={(item, isFavorite) => {
-                this.onFavorite(item, isFavorite)
+                ActionUtils.onFavorite(item, isFavorite,favoriteDao)
             }}
         />
     }

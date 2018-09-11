@@ -12,5 +12,8 @@ module.exports = {
     root_container: {
         flex: 1,
         backgroundColor: '#f5f5f5'
-    }
+    },
+
+    nav_bar_height_ios: 44,
+    nav_bar_height_android: 50,
 };
