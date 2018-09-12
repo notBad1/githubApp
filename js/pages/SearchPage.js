@@ -10,19 +10,26 @@ import {
     TextInput,
     Platform,
     ListView,
-    RefreshControl
+    RefreshControl,
+    ActivityIndicator,
+    TouchableOpacity,
+    DeviceEventEmitter
 } from 'react-native';
 
+import {ACTION_HOME} from './HomePage'
 import Utils from '../util/Utils'
 import ViewUtil from '../util/ViewUtil'
+import makeCancleable from '../util/Cancleable'
 import GlobalStyles from '../../res/styles/GlobalStyles'
 import {FLAG_STORYGE} from '../expand/dao/DataRepository'
 import ProjectModel from '../model/ProjectModel'
 import ActionUtils from '../util/ActionUtils'
 import RepositoryCell from '../common/RepositoryCell'
+// 读取本地标签
+import LanguageDao, {FLAG_LANGUAGE}  from '../expand/dao/LanguageDao'
 
 // 导入第三方组件
-import Toast from 'react-native-easy-toast'
+import Toast, {DURATION} from 'react-native-easy-toast'
 import FavoriteDao from '../expand/dao/FavoriteDao'
 
 const API_URL = 'https://api.github.com/search/repositories?q=';
@@ -31,10 +38,15 @@ let favoriteDao = new FavoriteDao(FLAG_STORYGE.flag_popular);
 export default class PopularPages extends Component {
     constructor(props) {
         super(props);
+        // 初始化languageDao
+        this.languageDao = new LanguageDao(FLAG_LANGUAGE.flage_key);
+        this.keys = [];
+        this.iskeyChange = false;
         this.state = {
             rightButText: '搜索',
             isLoading: false,
             favoriteKeys: [],
+            showBottombutton: false,
             dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
         }
     }
@@ -75,10 +87,12 @@ export default class PopularPages extends Component {
 
     loadData() { //加载数据
         this.updateState({
-            isLoading: true
+            isLoading: true,
+            showBottombutton: false
         });
         let url = API_URL + this.text;
-        fetch(url)
+        this.cancleable = makeCancleable(fetch(url));
+        this.cancleable.promise
             .then((response) => response.json())
             .then((result) => {
                 if (!this || !result || !result.items || result.items.length === 0) {
@@ -91,9 +105,13 @@ export default class PopularPages extends Component {
                 }
                 this.items = result.items;
                 this.getFavoriteKeys();
+                if (!this.checkKeyIsExist(this.text, this.keys)) {
+                    this.updateState({
+                        showBottombutton: true
+                    });
+                }
             })
             .catch((e) => {
-                this.toast.show('获取数据出错');
                 this.updateState({
                     isLoading: false,
                     rightButText: '搜索'
@@ -111,7 +129,8 @@ export default class PopularPages extends Component {
             this.updateState({
                 rightButText: '搜索',
                 isLoading: false
-            })
+            });
+            this.cancleable.cancel(); // 取消搜索
         }
 
     }
@@ -147,9 +166,60 @@ export default class PopularPages extends Component {
                 })
             }}
             onFavorite={(item, isFavorite) => {
-                ActionUtils.onFavorite(item, isFavorite, favoriteDao,FLAG_STORYGE.flag_popular)
+                ActionUtils.onFavorite(item, isFavorite, favoriteDao, FLAG_STORYGE.flag_popular)
             }}
         />
+    }
+
+
+    componentDidMount() {
+        // 组件被调用时
+        this.initkeys();
+    }
+
+    componentWillUnmount() { //组件被卸载
+        if (this.iskeyChange) {
+            DeviceEventEmitter.emit('ACTION_HOME', ACTION_HOME.A_RESTART)
+        }
+
+    }
+
+    /**
+     * 初始化标签集合 获取所有标签
+     */
+    async initkeys() {
+        this.keys = await this.languageDao.fetch()
+    }
+
+    /**
+     * 数据库中是否存在用户输入的key
+     */
+    checkKeyIsExist(key, keys) {
+        for (let i = 0, l = keys.length; i < l; i++) {
+            //toLowerCase() 把字符串转换成小写
+            if (key.toLowerCase() === keys[i].name.toLowerCase())return true;
+        }
+        return false;
+    }
+
+    /**
+     * 添加标签
+     */
+    saveKey() {
+        let key = this.text;
+        if (!this.checkKeyIsExist(key, this.keys)) {
+            key = {
+                "path": key,
+                "name": key,
+                "checked": true
+            };
+            this.keys.unshift(key);
+            this.languageDao.save(this.keys);
+            this.iskeyChange = true;
+            this.toast.show(key.name + '添加成功', DURATION.LENGTH_SHORT);
+        } else {
+            this.toast.show(key.name + '已经存在', DURATION.LENGTH_SHORT)
+        }
     }
 
     render() {
@@ -157,26 +227,45 @@ export default class PopularPages extends Component {
         if (Platform.OS === 'ios') {
             statusBar = <View style={[styles.statusBar, {backgroundColor: '#2196f3'}]}/>;
         }
+
+        let bottomButton = this.state.showBottombutton ? <TouchableOpacity
+            style={[styles.button, {backgroundColor: '#2196f3'}]}
+            onPress={() => this.saveKey()}
+        >
+            <View style={{alignItems: 'center'}}>
+                <Text style={styles.title}>添加标签</Text>
+            </View>
+        </TouchableOpacity> : null;
+
         return <View style={styles.container}>
             {statusBar}
             {this.renderNavBar()}
-            <ListView
-                dataSource={this.state.dataSource}
-                renderRow={(data) => this.renderRow(data)}
-                // 下拉刷新组件
-                refreshControl={
-                    <RefreshControl
-                        refreshing={this.state.isLoading}// 刷新状态
-                        // 监听下拉状态 用户下拉刷新的时候获取数据
-                        onRefresh={() => this.loadData()}
-                        // 指示器颜色
-                        colors={['#2196f3']} //android
-                        tintColor={["#2196f3"]} //ios
-                        // 标题 ios
-                        title={'loading...'}
-                    />
+            <View style={{flex: 1}}>
+                {
+                    this.state.isLoading ? <ActivityIndicator style={styles.centering} animating={this.state.isLoading}
+                                                              size="large"/> : null
                 }
-            />
+                {
+                    !this.state.isLoading ? <ListView
+                        dataSource={this.state.dataSource}
+                        renderRow={(data) => this.renderRow(data)}
+                        // 下拉刷新组件
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={this.state.isLoading}// 刷新状态
+                                // 监听下拉状态 用户下拉刷新的时候获取数据
+                                onRefresh={() => this.loadData()}
+                                // 指示器颜色
+                                colors={['#2196f3']} //android
+                                tintColor={["#2196f3"]} //ios
+                                // 标题 ios
+                                title={'loading...'}
+                            />
+                        }
+                    /> : null
+                }
+            </View>
+            {bottomButton}
             <Toast ref={toast => this.toast = toast}/>
         </View>
     }
@@ -206,6 +295,25 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginRight: 10,
         color: '#fff'
+    },
+    centering: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    button: {
+        height: 45,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 5,
+        position: 'absolute',
+        left: 10,
+        right: 10,
+        bottom: 10
+    },
+    title: {
+        fontSize: 18,
+        color: "#fff"
     }
 
 });

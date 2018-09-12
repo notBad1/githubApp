@@ -24,19 +24,57 @@ import MyPage from './MyPage'
 // import TrendingTest from '../../TrendingTest'
 // import AsyncStorageTest from '../../AsyncStorageTest'
 
+export const ACTION_HOME = {
+    'A_SHOWST': 'showToast',
+    'A_RESTART': 'restart'
+};
+export const FLAG_TAB = {
+    flag_popularTab: 'tb_popular',
+    flag_trendingTab: 'trending',
+    flag_favoriteTab: 'tb_favorite',
+    flag_myTab: 'tb_my'
+};
+
 export default class HomePage extends Component {
     constructor(props) {
         super(props);
+        let selectedTab = this.props.selectedTab ? this.props.selectedTab : 'tb_popular';
         this.state = {
-            selectedTab: 'tb_popular'
+            selectedTab: selectedTab
         }
     }
 
     // 在组件完成加载的时候，希望注册一个通知
     componentDidMount() {
-        this.listenter = DeviceEventEmitter.addListener('showToast', (text) => {
+        this.listenter = DeviceEventEmitter.addListener('ACTION_HOME', (action, params) => {
+            this.onAction(action, params);
+
+        })
+    }
+
+    /**
+     * 通知事件回调处理
+     * */
+    onAction(action, params) {
+        if (ACTION_HOME.A_RESTART === action) {
+            this.onRestart();
+        } else if (ACTION_HOME.A_SHOWST === action) {
             //在首页显示通知
-            this.toast.show(text, DURATION.LENGTH_SHORT);
+            this.toast.show(params.text, DURATION.LENGTH_SHORT);
+        }
+    }
+
+    /**
+     * 重启首页
+     * jumpToTab 默认显示页面
+     * */
+    onRestart(jumpToTab) {
+        this.props.navigator.resetTo({
+            component: HomePage,
+            params: {
+                ...this.props,
+                selectedTab: jumpToTab
+            }
         })
     }
 
