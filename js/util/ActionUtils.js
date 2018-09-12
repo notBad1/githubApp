@@ -4,7 +4,7 @@
  */
 
 import RepositoryDetail from '../pages/RepositoryDetail';
-
+import {FLAG_STORYGE} from '../expand/dao/DataRepository'
 export default class ActionUtils {
     /**
      * 打开页面详情页
@@ -21,8 +21,8 @@ export default class ActionUtils {
     }
 
     //收藏按钮的点击回调函数
-    static onFavorite(item, isFavorite, favoriteDao) {
-        let key = item.id ? item.id.toString() : item.fullName.toString();
+    static onFavorite(item, isFavorite, favoriteDao, flag) {
+        let key = flag === FLAG_STORYGE.flag_trending ? item.fullName.toString() : item.id.toString();
         if (isFavorite) {
             favoriteDao.saveFavoriteItem(key, JSON.stringify(item))
         } else {

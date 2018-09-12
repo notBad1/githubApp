@@ -80,13 +80,7 @@ export default class PopularPages extends Component {
     }
 
     //收藏按钮的点击回调函数
-    onFavorite(item, isFavorite) {
-        let key = item.id ? item.id.toString() : item.fullName.toString();
-        if (isFavorite) {
-            this.favoriteDao.saveFavoriteItem(key, JSON.stringify(item))
-        } else {
-            this.favoriteDao.removeFavoriteItem(key)
-        }
+    onFavorite(item) {
         // 在收藏页面取消项目收藏的话，通过DeviceEventEmitter给当前操作项目所在模块发送通知
         // 将用户操作的项目保存到数组中
         ArrayUtils.updateArray(item, this.unFavorite);
@@ -114,7 +108,8 @@ export default class PopularPages extends Component {
                 })
             }}
             onFavorite={(item, isFavorite) => {
-                this.onFavorite(item, isFavorite)
+                ActionUtils.onFavorite(item, isFavorite, this.favoriteDao, this.props.flag);
+                this.onFavorite(item);
             }}
         />
     }

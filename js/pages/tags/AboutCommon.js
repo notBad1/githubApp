@@ -99,15 +99,6 @@ export default class AboutCommon {
         }
     }
 
-    //收藏按钮的点击回调函数
-    onFavorite(item, isFavorite) {
-        if (isFavorite) {
-            this.favoriteDao.saveFavoriteItem(item.id.toString(), JSON.stringify(item))
-        } else {
-            this.favoriteDao.removeFavoriteItem(item.id.toString())
-        }
-    }
-
 
     /**
      * 创建项目视图
@@ -132,7 +123,7 @@ export default class AboutCommon {
                         })
                     }}
                     onFavorite={(item, isFavorite) => {
-                        this.onFavorite(item, isFavorite)
+                        ViewUtil.onFavorite(item, isFavorite, this.favoriteDao, FLAG_STORYGE.flag_popular)
                     }}
                 />
             )
