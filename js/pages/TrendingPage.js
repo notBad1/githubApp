@@ -13,16 +13,12 @@ import {
 import NavigatorBar from '../common/navigatorBar'
 import TrendingTab from './TrendingTab'
 
-
-// 自定义页签
-import CostomKeyPage from './tags/CostomKeyPage'
-// 页签排序
-import SortKeyPage from './tags/SortKeyPage'
-
 // 弹出框
+import {FLAG_TAB} from  './HomePage'
+import ViewUtil from '../util/ViewUtil'
+import MoreMenu, {MORE_MENU} from '../common/MoreMenu'
 import TimeSpan from '../model/TimeSpan'
 import Popover from '../common/Popover'
-import KeyView from '../model/KeyView'
 
 // 导入第三方组件
 import ScrollableTabView, {ScrollableTabBar,} from 'react-native-scrollable-tab-view'
@@ -35,11 +31,6 @@ const timeSpanTextArray = [
     new TimeSpan('今 天', 'daily'),
     new TimeSpan('本 周', 'weekly'),
     new TimeSpan('本 月', 'monthly')
-];
-const keyViewArray = [
-    new KeyView('自定义语言', CostomKeyPage, false, FLAG_LANGUAGE.flag_language),
-    new KeyView('语言排序', SortKeyPage, false, FLAG_LANGUAGE.flag_language),
-    new KeyView('删除语言', CostomKeyPage, true, FLAG_LANGUAGE.flag_language)
 ];
 
 export default class PopularPages extends Component {
@@ -96,19 +87,9 @@ export default class PopularPages extends Component {
         this.setState({
             isVisible: false,
         });
-        this.state.btn === 'button' ?
-            this.setState({
-                timeSpan: item,
-            })
-            :
-            this.props.navigator.push({
-                component: item.component,
-                params: {
-                    ...this.props,
-                    isRemoveKey: item.isRemoveKey,
-                    flag: item.flag
-                }
-            })
+        this.setState({
+            timeSpan: item,
+        });
     }
 
     // 导航栏标题
@@ -135,8 +116,35 @@ export default class PopularPages extends Component {
         </View>
     }
 
+    renderMoreMenu() {
+        let menus = [
+            MORE_MENU.Custom_Language,
+            MORE_MENU.Sort_Language,
+            MORE_MENU.Custom_Theme,
+            MORE_MENU.About_Author,
+            MORE_MENU.About
+        ];
+
+        let params = {
+            ...this.props,
+            formPage: FLAG_TAB.flag_trendingTab
+        };
+
+        return <MoreMenu
+            {...params}
+            menus={menus}
+            anchorView={() => this.refs.moreButton}
+            ref="moreMenuButton"
+        />
+    }
+
+    renderRightButton() {
+        return <View style={{flexDirection: 'row'}}>
+            {ViewUtil.getSearchButton(() => this.onSeach())}
+            {ViewUtil.getMoreButton(() => this.refs.moreMenuButton.open())}
+        </View>
+    }
     render() {
-        let array = this.state.btn === 'button' ? timeSpanTextArray : keyViewArray;
         let content = this.state.languages.length > 0 ?
             <ScrollableTabView
                 tabBarBackgroundColor="#2196f3"
@@ -167,7 +175,7 @@ export default class PopularPages extends Component {
                 }}
                 contentStyle={{backgroundColor: '#000', opacity: 0.7}}
             >
-                {array.map((item, i, arry) => {
+                {timeSpanTextArray.map((item, i, arry) => {
                     return <Text key={i}
                                  onPress={() => {
                                      this.onSelected(item)
@@ -178,7 +186,7 @@ export default class PopularPages extends Component {
                                      paddingHorizontal: 15,
                                      marginVertical: 8
                                  }}
-                    >{item.showText ? item.showText : item.showName}</Text>
+                    >{item.showText}</Text>
                 })}
 
             </Popover>;
@@ -195,30 +203,13 @@ export default class PopularPages extends Component {
                 leftButton={
                     <View></View>
                 }
-                rightButton={
-                    <View style={{flexDirection: 'row'}}>
-                        <TouchableOpacity
-                            onPress={() => {
-                                this.onSeach()
-                            }}
-                        >
-                            <Image style={{width: 26, height: 26, margin: 12}}
-                                   source={require('../../res/images/ic_search_white_48pt.png')}/>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            ref="button1"
-                            onPress={() => this.showPopover('button1')}
-                        >
-                            <Image style={{width: 26, height: 26, margin: 12}}
-                                   source={require('../../res/images/ic_more_vert_white_48pt.png')}/>
-                        </TouchableOpacity>
-                    </View>
-                }
+                rightButton={ this.renderRightButton()}
             />
             {/*页签*/}
             {content}
             {/*弹出框*/}
             {timeSpanView}
+            {this.renderMoreMenu()}
         </View>
     }
 }

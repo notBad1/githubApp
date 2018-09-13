@@ -16,7 +16,8 @@ import {
     View,
     ScrollView,
     Image,
-    Alert
+    Alert,
+    DeviceEventEmitter
 } from 'react-native';
 
 // 页面组件
@@ -28,7 +29,7 @@ import ViewUtil from '../../util/ViewUtil'
 import LanguageDao, {FLAG_LANGUAGE}  from '../../expand/dao/LanguageDao'
 // 操作数组方法
 import ArrayUtils from '../../util/ArrayUtils'
-
+import {ACTION_HOME,FLAG_TAB} from '../../pages/HomePage'
 // 导入第三方组件
 import CheckBox from 'react-native-check-box'
 
@@ -143,6 +144,8 @@ export default class PopularPages extends Component {
         // 如果用户做修改，就将用户修改保存到数据库中
         this.languageDao.save(this.state.dataArray);
         this.props.navigator.pop();
+        let jumpToTab = this.props.flag === FLAG_LANGUAGE.flag_language ? FLAG_TAB.flag_trendingTab : FLAG_TAB.flag_popularTab;
+        DeviceEventEmitter.emit('ACTION_HOME',ACTION_HOME.A_RESTART,jumpToTab)
     }
 
     // 返回

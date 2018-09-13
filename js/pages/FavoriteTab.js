@@ -14,7 +14,6 @@ import {
 
 // 导入页面组件
 import RepositoryCell from '../common/RepositoryCell'
-import RepositoryDetail from '../pages/RepositoryDetail'
 import ProjectModel from '../model/ProjectModel'
 import FavoriteDao from '../expand/dao/FavoriteDao'
 import ArrayUtils from '../util/ArrayUtils'

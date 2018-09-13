@@ -12,10 +12,10 @@ import {
 } from 'react-native';
 
 import NavigatorBar from '../common/navigatorBar'
-import MoreMenu, {MORE_MENU} from '../common/MoreMenu'
+import {MORE_MENU} from '../common/MoreMenu'
 import GlobalStyles from '../../res/styles/GlobalStyles'
 import ViewUtil from '../util/ViewUtil'
-import LanguageDao, {FLAG_LANGUAGE}  from '../expand/dao/LanguageDao'
+import {FLAG_LANGUAGE}  from '../expand/dao/LanguageDao'
 
 import AboutPage from './tags/AboutPage'
 import CostomKeyPage from './tags/CostomKeyPage'

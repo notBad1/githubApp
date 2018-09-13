@@ -14,7 +14,8 @@ import {
     TouchableOpacity,
     TouchableHighlight,
     Image,
-    Alert
+    Alert,
+    DeviceEventEmitter
 } from 'react-native';
 
 // 导航栏
@@ -25,7 +26,7 @@ import LanguageDao, {FLAG_LANGUAGE}  from '../../expand/dao/LanguageDao'
 import ArrayUtils from '../../util/ArrayUtils'
 // 返回按钮
 import ViewUtil from '../../util/ViewUtil'
-
+import {ACTION_HOME, FLAG_TAB} from '../../pages/HomePage'
 // 导入第三方组件
 import SortableListView from 'react-native-sortable-listview' // 具有可拖拽功能的listView
 
@@ -89,6 +90,8 @@ export default class SortKeyPage extends Component {
         this.languageDao.save(this.sortResultArray);
         // 返回到上一页
         this.props.navigator.pop();
+        let selectedTab = this.props.flag === FLAG_LANGUAGE.flage_key ? FLAG_TAB.flag_popularTab : FLAG_TAB.flag_trendingTab;
+        DeviceEventEmitter.emit('ACTION_HOME', ACTION_HOME.A_RESTART, selectedTab); // 通知首页重启
     }
 
     // 获取到排序之后的新数组

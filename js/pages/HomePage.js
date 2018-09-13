@@ -30,7 +30,7 @@ export const ACTION_HOME = {
 };
 export const FLAG_TAB = {
     flag_popularTab: 'tb_popular',
-    flag_trendingTab: 'trending',
+    flag_trendingTab: 'tb_trending',
     flag_favoriteTab: 'tb_favorite',
     flag_myTab: 'tb_my'
 };
@@ -48,7 +48,6 @@ export default class HomePage extends Component {
     componentDidMount() {
         this.listenter = DeviceEventEmitter.addListener('ACTION_HOME', (action, params) => {
             this.onAction(action, params);
-
         })
     }
 
@@ -57,7 +56,7 @@ export default class HomePage extends Component {
      * */
     onAction(action, params) {
         if (ACTION_HOME.A_RESTART === action) {
-            this.onRestart();
+            this.onRestart(params);
         } else if (ACTION_HOME.A_SHOWST === action) {
             //在首页显示通知
             this.toast.show(params.text, DURATION.LENGTH_SHORT);

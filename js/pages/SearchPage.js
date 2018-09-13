@@ -272,7 +272,8 @@ export default class PopularPages extends Component {
 }
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: '#FAFAFA'
     },
     statusBar: {
         height: 20

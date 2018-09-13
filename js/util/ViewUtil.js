@@ -35,6 +35,35 @@ export default class ViewUtil {
     }
 
     /**
+     * 更多菜单按钮
+     * @param callback
+     * @returns {XML}
+     */
+    static getMoreButton(callback) {
+        return <TouchableOpacity style={{padding: 8}} ref="moreButton"
+                                 onPress={callback}
+        >
+            <Image style={{width: 26, height: 26, tintColor: '#fff'}}
+                   source={require('../../res/images/ic_more_vert_white_48pt.png')}/>
+        </TouchableOpacity>
+    }
+
+    /**
+     * 搜素图标按钮
+     * @param callback
+     * @returns {XML}
+     */
+    static getSearchButton(callback) {
+        return <TouchableOpacity style={{padding: 8}}
+                                 onPress={callback}
+        >
+            <Image style={{width: 26, height: 26, tintColor: '#fff'}}
+                   source={require('../../res/images/ic_search_white_48pt.png')}/>
+        </TouchableOpacity>
+    }
+
+
+    /**
      * 导出我的页面中功能列表 Item
      * @param callback  点击item回调函数
      * @param icon 左侧图标
