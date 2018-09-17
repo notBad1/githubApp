@@ -27,7 +27,23 @@ import AboutAuthorPage from './tags/AboutAuthorPage'
 export default class PopularPages extends Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            modalVisible: false,
+            theme: this.props.theme
+        }
+    }
+
+    returnThemeView(){
+        return <CustomThemePage
+            modalVisible={this.state.modalVisible}
+            onClose = {()=>this.onClose()}
+            {...this.props}
+        />
+    }
+    onClose(){ // 关闭弹出框
+        this.setState({
+            modalVisible: false
+        })
     }
 
     onClick(tab) {
@@ -58,7 +74,9 @@ export default class PopularPages extends Component {
                 params.isRemoveKey = true;
                 break;
             case MORE_MENU.Custom_Theme:
-                targetComponent = CustomThemePage;
+                this.setState({
+                    modalVisible: true
+                });
                 break;
             case MORE_MENU.About_Author:
                 targetComponent = AboutAuthorPage;
@@ -79,10 +97,10 @@ export default class PopularPages extends Component {
             <NavigatorBar
                 title={'我的'}
                 style={{
-                    backgroundColor: '#2196f3'
+                    backgroundColor: this.state.theme.themeColor
                 }}
                 statusBar={{
-                    backgroundColor: '#2196f3'
+                    backgroundColor:this.state.theme.themeColor
                 }}
             />
             {/*滚动试图*/}
@@ -95,12 +113,12 @@ export default class PopularPages extends Component {
                     <View style={styles.item}>
                         <View style={{flexDirection: 'row', alignItems: 'center'}}>
                             <Image source={require('../../res/images/ic_trending.png')}
-                                   style={[{width: 45, height: 45, marginRight: 10}, {tintColor: '#2196f3'}]}
+                                   style={[{width: 45, height: 45, marginRight: 10}, {tintColor: this.state.theme.themeColor}]}
                             />
                             <Text style={styles.text}>GitHub Popular</Text>
                         </View>
                         <Image source={require('../../res/images/ic_tiaozhuan.png')}
-                               style={[{width: 30, height: 30}, {tintColor: '#2196f3'}]}
+                               style={[{width: 30, height: 30}, {tintColor: this.state.theme.themeColor}]}
                         />
                     </View>
                 </TouchableHighlight>
@@ -110,7 +128,7 @@ export default class PopularPages extends Component {
                     ViewUtil.getSetingItem(
                         () => {
                             this.onClick(MORE_MENU.Custom_Language)
-                        }, require('./tags/img/ic_custom_language.png'), '自定义语言', '#2196f3', null
+                        }, require('./tags/img/ic_custom_language.png'), '自定义语言', this.state.theme.themeColor, null
                     )
                 }
                 <View style={GlobalStyles.line}/>
@@ -118,7 +136,7 @@ export default class PopularPages extends Component {
                     ViewUtil.getSetingItem(
                         () => {
                             this.onClick(MORE_MENU.Sort_Language)
-                        }, require('./tags/img/ic_swap_vert.png'), '语言排序', '#2196f3', null
+                        }, require('./tags/img/ic_swap_vert.png'), '语言排序', this.state.theme.themeColor, null
                     )
                 }
                 <View style={GlobalStyles.line}/>
@@ -127,7 +145,7 @@ export default class PopularPages extends Component {
                     ViewUtil.getSetingItem(
                         () => {
                             this.onClick(MORE_MENU.Custom_Key)
-                        }, require('./tags/img/ic_custom_language.png'), '自定义标签', '#2196f3', null
+                        }, require('./tags/img/ic_custom_language.png'), '自定义标签', this.state.theme.themeColor, null
                     )
                 }
                 <View style={GlobalStyles.line}/>
@@ -135,14 +153,14 @@ export default class PopularPages extends Component {
                     ViewUtil.getSetingItem(
                         () => {
                             this.onClick(MORE_MENU.Sort_Key)
-                        }, require('./tags/img/ic_swap_vert.png'), '标签排序', '#2196f3', null)
+                        }, require('./tags/img/ic_swap_vert.png'), '标签排序', this.state.theme.themeColor, null)
                 }
                 <View style={GlobalStyles.line}/>
                 {
                     ViewUtil.getSetingItem(
                         () => {
                             this.onClick(MORE_MENU.Remove_Key)
-                        }, require('./tags/img/ic_remove.png'), '删除标签', '#2196f3', null)
+                        }, require('./tags/img/ic_remove.png'), '删除标签', this.state.theme.themeColor, null)
                 }
                 <View style={GlobalStyles.line}/>
                 <Text style={styles.title}> 设置 </Text>
@@ -150,18 +168,19 @@ export default class PopularPages extends Component {
                     ViewUtil.getSetingItem(
                         () => {
                             this.onClick(MORE_MENU.Custom_Theme)
-                        }, require('./tags/img/ic_custom_theme.png'), '自定义主题', '#2196f3', null)
+                        }, require('./tags/img/ic_custom_theme.png'), '自定义主题',this.state.theme.themeColor, null)
                 }
                 <View style={GlobalStyles.line}/>
                 {
                     ViewUtil.getSetingItem(
                         () => {
                             this.onClick(MORE_MENU.About_Author)
-                        }, require('./tags/img/ic_insert_emoticon.png'), '关于作者', '#2196f3', null)
+                        }, require('./tags/img/ic_insert_emoticon.png'), '关于作者', this.state.theme.themeColor, null)
                 }
                 <View style={GlobalStyles.line}/>
             </ScrollView>
 
+            {this.returnThemeView()}
         </View>
     }
 }

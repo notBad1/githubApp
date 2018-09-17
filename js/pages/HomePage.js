@@ -40,7 +40,8 @@ export default class HomePage extends Component {
         super(props);
         let selectedTab = this.props.selectedTab ? this.props.selectedTab : 'tb_popular';
         this.state = {
-            selectedTab: selectedTab
+            selectedTab: selectedTab,
+            theme: this.props.theme
         }
     }
 
@@ -87,10 +88,10 @@ export default class HomePage extends Component {
     _renderTab(Component, selectedTab, title, Icon) {
         return <TabNavigator.Item
             selected={this.state.selectedTab === selectedTab}
-            selectedTitleStyle={{color: '#2196f3'}}
+            selectedTitleStyle={{color: this.state.theme.themeColor}}
             title={title}
             renderIcon={() => <Image style={styles.image} source={Icon}/>}
-            renderSelectedIcon={() => <Image style={[styles.image, {tintColor: '#2196f3'}]} source={Icon}/>}
+            renderSelectedIcon={() => <Image style={[styles.image, {tintColor: this.state.theme.themeColor}]} source={Icon}/>}
             onPress={() => this.setState({selectedTab: selectedTab})}>
             <Component {...this.props}/>
         </TabNavigator.Item>
@@ -98,6 +99,7 @@ export default class HomePage extends Component {
 
     render() {
         return <View style={styles.container}>
+
             {/*底部导航*/}
             <TabNavigator tabBarStyle={{backgroundColor: '#fff'}}>
                 {this._renderTab(PopularPage, 'tb_popular', '最热', require('../../res/images/ic_polular.png'))}
@@ -115,14 +117,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#f5f5f5',
-    },
-    page1: {
-        flex: 1,
-        backgroundColor: '#f00'
-    },
-    page2: {
-        flex: 1,
-        backgroundColor: '#00f'
     },
     image: {
         width: 22,

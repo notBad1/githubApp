@@ -110,6 +110,7 @@ export default class PopularPages extends Component {
                 ActionUtils.onFavorite(item, isFavorite, this.favoriteDao, this.props.flag);
                 this.onFavorite(item);
             }}
+            {...this.props}
         />
     }
 

@@ -33,6 +33,7 @@ export default class PopularPages extends Component {
         this.languageDao = new LanguageDao(FLAG_LANGUAGE.flage_key);
         this.state = {
             languages: [], //标签数组
+            theme: this.props.theme
         }
     }
 
@@ -98,7 +99,7 @@ export default class PopularPages extends Component {
     render() {
         let content = this.state.languages.length > 0 ?
             <ScrollableTabView
-                tabBarBackgroundColor="#2196f3"
+                tabBarBackgroundColor= {this.state.theme.themeColor}
                 tabBarActiveTextColor="#fff"
                 tabBarInactiveTextColor="mintcream"
                 tabBarUnderlineStyle={{backgroundColor: '#e7e7e7', height: 2}}
@@ -115,10 +116,10 @@ export default class PopularPages extends Component {
             <NavigatorBar
                 title='最热'
                 style={{
-                    backgroundColor: '#2196f3'
+                    backgroundColor: this.state.theme.themeColor
                 }}
                 statusBar={{
-                    backgroundColor: '#2196f3'
+                    backgroundColor: this.state.theme.themeColor
                 }}
                 leftButton={<View></View>}
                 rightButton={this.renderRightButton()}

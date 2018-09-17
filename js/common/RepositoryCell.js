@@ -20,7 +20,8 @@ export default class RepositoryCell extends Component {
         super(props);
         this.state = {
             isFavorite: this.props.projectModel.isFavorite, //是否收藏
-            favoriteIcon: this.props.projectModel.isFavorite ? require('../../res/images/ic_star.png') : require('../../res/images/ic_unstar_transparent.png')
+            favoriteIcon: this.props.projectModel.isFavorite ? require('../../res/images/ic_star.png') : require('../../res/images/ic_unstar_transparent.png'),
+            theme: this.props.theme
         }
     }
 
@@ -50,7 +51,7 @@ export default class RepositoryCell extends Component {
                 this.onPressfavorite()
             }}
         >
-            <Image style={{height: 22, width: 22, tintColor: '#2196f3'}}
+            <Image style={{height: 22, width: 22, tintColor: this.state.theme.themeColor}}
                    source={this.state.favoriteIcon}/>
         </TouchableOpacity>;
 

@@ -159,6 +159,7 @@ export default class PopularPages extends Component {
                 onFavorite={(item, isFavorite) => {
                     ActionUtils.onFavorite(item, isFavorite,favoriteDao,FLAG_STORYGE.flag_trending)
                 }}
+                {...this.props}
             />
         } else {
             return null

@@ -33,7 +33,8 @@ export default class RepositoryDetail extends Component {
             title: title, //标题
             canCoBack: false, // 是否可以返回
             isFavorite: this.props.projectModel.isFavorite, //是否收藏
-            favoriteIcon: this.props.projectModel.isFavorite ? require('../../res/images/ic_star.png') : require('../../res/images/ic_star_navbar.png')
+            favoriteIcon: this.props.projectModel.isFavorite ? require('../../res/images/ic_star.png') : require('../../res/images/ic_star_navbar.png'),
+            theme: this.props.theme
         };
     }
 
@@ -57,15 +58,15 @@ export default class RepositoryDetail extends Component {
         } else {
             this.favoriteDao.removeFavoriteItem(key)
         }
-        // // 将用户是否操作的项目
-        // ArrayUtils.updateArray(projectModel.item, this.unFavorite);
-        // if (this.unFavorite.length > 0) {
-        //     if (this.props.flag === 'popular') {
-        //         DeviceEventEmitter.emit('favoriteChange_popular')
-        //     } else {
-        //         DeviceEventEmitter.emit('favoriteChange_trending')
-        //     }
-        // }
+        // 将用户是否操作的项目
+        ArrayUtils.updateArray(projectModel.item, this.unFavorite);
+        if (this.unFavorite.length > 0) {
+            if (this.props.flag === 'popular') {
+                DeviceEventEmitter.emit('favoriteChange_popular')
+            } else {
+                DeviceEventEmitter.emit('favoriteChange_trending')
+            }
+        }
     }
 
     onBack() {
@@ -103,10 +104,10 @@ export default class RepositoryDetail extends Component {
                 <NavigatorBar
                     title={this.state.title}
                     style={{
-                        backgroundColor: '#2196f3'
+                        backgroundColor: this.state.theme.themeColor
                     }}
                     statusBar={{
-                        backgroundColor: '#2196f3',
+                        backgroundColor: this.state.theme.themeColor,
                     }}
                     leftButton={ViewUtil.getLeftButton(() => {
                         this.onBack()

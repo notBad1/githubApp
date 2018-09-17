@@ -35,7 +35,7 @@ import FavoriteDao from '../expand/dao/FavoriteDao'
 const API_URL = 'https://api.github.com/search/repositories?q=';
 let favoriteDao = new FavoriteDao(FLAG_STORYGE.flag_popular);
 
-export default class PopularPages extends Component {
+export default class SearchPage extends Component {
     constructor(props) {
         super(props);
         // 初始化languageDao
@@ -48,6 +48,7 @@ export default class PopularPages extends Component {
             favoriteKeys: [],
             showBottombutton: false,
             dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
+            theme: this.props.theme
         }
     }
 
@@ -146,7 +147,7 @@ export default class PopularPages extends Component {
             this.refs.input.blur();// 隐藏键盘
             this.onRightButClick()
         });
-        return <View style={styles.navBar}>
+        return <View style={[styles.navBar,{backgroundColor: this.state.theme.themeColor}]}>
             {backBut}
             {inputText}
             {rightBut}
@@ -225,11 +226,11 @@ export default class PopularPages extends Component {
     render() {
         let statusBar = null;
         if (Platform.OS === 'ios') {
-            statusBar = <View style={[styles.statusBar, {backgroundColor: '#2196f3'}]}/>;
+            statusBar = <View style={[styles.statusBar, {backgroundColor: this.state.theme.themeColor}]}/>;
         }
 
         let bottomButton = this.state.showBottombutton ? <TouchableOpacity
-            style={[styles.button, {backgroundColor: '#2196f3'}]}
+            style={[styles.button, {backgroundColor: this.state.theme.themeColor}]}
             onPress={() => this.saveKey()}
         >
             <View style={{alignItems: 'center'}}>
@@ -282,7 +283,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: '#2196f3',
         height: Platform.OS === 'ios' ? GlobalStyles.nav_bar_height_ios : GlobalStyles.nav_bar_height_android
     },
     textInput: {

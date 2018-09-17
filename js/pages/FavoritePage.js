@@ -24,7 +24,9 @@ import MoreMenu, {MORE_MENU} from '../common/MoreMenu'
 export default class PopularPages extends Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            theme: this.props.theme
+        }
     }
 
 
@@ -59,10 +61,10 @@ export default class PopularPages extends Component {
             <NavigatorBar
                 title={'收藏'}
                 style={{
-                    backgroundColor: '#2196f3'
+                    backgroundColor: this.state.theme.themeColor
                 }}
                 statusBar={{
-                    backgroundColor: '#2196f3'
+                    backgroundColor: this.state.theme.themeColor
                 }}
                 leftButton={
                     <View></View>
@@ -70,7 +72,7 @@ export default class PopularPages extends Component {
                 rightButton={ this.renderRightButton()}
             />
             <ScrollableTabView
-                tabBarBackgroundColor="#2196f3"
+                tabBarBackgroundColor={this.state.theme.themeColor}
                 tabBarActiveTextColor="#fff"
                 tabBarInactiveTextColor="mintcream"
                 tabBarUnderlineStyle={{backgroundColor: '#e7e7e7', height: 2}}

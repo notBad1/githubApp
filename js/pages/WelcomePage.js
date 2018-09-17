@@ -11,6 +11,8 @@ import {
 
 import HomePage from './HomePage'
 
+import ThemeDao from '../expand/dao/ThemeDao'
+
 export default class WelcomePage extends Component{
     constructor(props) {
         super(props);
@@ -18,10 +20,16 @@ export default class WelcomePage extends Component{
         }
     }
     componentDidMount () {
+        new ThemeDao().getTheme().then((r)=>{
+            this.theme = r
+        });
         this.timer = setTimeout(()=>{
             // 跳转到首页
             this.props.navigator.resetTo({
-                component: HomePage
+                component: HomePage,
+                params: {
+                    theme : this.theme
+                }
             })
         },2000)
     }

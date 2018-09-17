@@ -43,7 +43,8 @@ export default class PopularPages extends Component {
             isVisible: false, // 是否显示弹出框
             buttonRect: {}, //弹框显示位置
             timeSpan: timeSpanTextArray[0],
-            btn: ''
+            btn: '',
+            theme: this.props.theme
         }
     }
 
@@ -147,7 +148,7 @@ export default class PopularPages extends Component {
     render() {
         let content = this.state.languages.length > 0 ?
             <ScrollableTabView
-                tabBarBackgroundColor="#2196f3"
+                tabBarBackgroundColor={this.state.theme.themeColor}
                 tabBarActiveTextColor="#fff"
                 tabBarInactiveTextColor="mintcream"
                 tabBarUnderlineStyle={{backgroundColor: '#e7e7e7', height: 2}}
@@ -195,10 +196,10 @@ export default class PopularPages extends Component {
             <NavigatorBar
                 titleView={this.renderTitleView()}
                 style={{
-                    backgroundColor: '#2196f3'
+                    backgroundColor: this.state.theme.themeColor
                 }}
                 statusBar={{
-                    backgroundColor: '#2196f3'
+                    backgroundColor: this.state.theme.themeColor
                 }}
                 leftButton={
                     <View></View>
