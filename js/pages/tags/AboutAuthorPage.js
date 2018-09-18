@@ -83,6 +83,7 @@ export default class AboutPage extends Component {
             showBlog: false,
             showQQ: false,
             showContact: false,
+            theme: this.props.theme
         };
     }
 
@@ -191,7 +192,7 @@ export default class AboutPage extends Component {
                     {
                         ViewUtil.getSetingItem(() => {
                             this.onClick(dic[i].title);
-                        }, '', title, '#2196f3')
+                        }, '', title, this.state.theme.themeColor)
                     }
                     <View style={GlobalStyles.line}/>
                 </View>
@@ -205,7 +206,7 @@ export default class AboutPage extends Component {
             {
                 ViewUtil.getSetingItem(() => {
                     this.onClick(FLAG.BLOG.name);
-                }, require('../../../res/images/ic_computer.png'), FLAG.BLOG.name, '#2196f3', this.getExpandableIcon(this.state.showBlog))
+                }, require('../../../res/images/ic_computer.png'), FLAG.BLOG.name,this.state.theme.themeColor, this.getExpandableIcon(this.state.showBlog))
             }
             <View style={GlobalStyles.line}/>
             {
@@ -214,7 +215,7 @@ export default class AboutPage extends Component {
             {
                 ViewUtil.getSetingItem(() => {
                     this.onClick(FLAG.REPOSITORY.name);
-                }, require('../../../res/images/ic_code.png'), FLAG.REPOSITORY, '#2196f3', this.getExpandableIcon(this.state.showRepository))
+                }, require('../../../res/images/ic_code.png'), FLAG.REPOSITORY, this.state.theme.themeColor, this.getExpandableIcon(this.state.showRepository))
             }
             <View style={GlobalStyles.line}/>
             {
@@ -223,7 +224,7 @@ export default class AboutPage extends Component {
             {
                 ViewUtil.getSetingItem(() => {
                     this.onClick(FLAG.QQ.name);
-                }, require('../../../res/images/ic_computer.png'), FLAG.QQ.name, '#2196f3', this.getExpandableIcon(this.state.showQQ))
+                }, require('../../../res/images/ic_computer.png'), FLAG.QQ.name, this.state.theme.themeColor, this.getExpandableIcon(this.state.showQQ))
             }
             <View style={GlobalStyles.line}/>
             {
@@ -232,7 +233,7 @@ export default class AboutPage extends Component {
             {
                 ViewUtil.getSetingItem(() => {
                     this.onClick(FLAG.CONTACT.name);
-                }, require('../../../res/images/ic_contacts.png'), FLAG.CONTACT.name, '#2196f3', this.getExpandableIcon(this.state.showContact))
+                }, require('../../../res/images/ic_contacts.png'), FLAG.CONTACT.name, this.state.theme.themeColor, this.getExpandableIcon(this.state.showContact))
             }
             <View style={GlobalStyles.line}/>
             {

@@ -43,7 +43,8 @@ export default class PopularPages extends Component {
         // 定义是否是标签移除页 ,  通过this.props.isRemoveKey判断用户点击的标签移除还是自定义标签
         this.isRemoveKey = this.props.isRemoveKey ? true : false;
         this.state = {
-            dataArray: [] // 标签数组
+            dataArray: [] ,// 标签数组
+            theme: this.props.theme
         };
     }
 
@@ -79,9 +80,9 @@ export default class PopularPages extends Component {
                 isChecked={isChecked} // 是否选中
                 leftText={leftText} // 左侧文字
                 leftTextStyle={{color: '#333', fontSize: 16}}
-                checkedImage={<Image source={require('./img/ic_check_box.png')} style={{tintColor: '#2196f3'}}/>}
+                checkedImage={<Image source={require('./img/ic_check_box.png')} style={{tintColor: this.state.theme.themeColor}}/>}
                 unCheckedImage={<Image source={require('./img/ic_check_box_outline_blank.png')}
-                                       style={{tintColor: '#2196f3'}}/>}
+                                       style={{tintColor:this.state.theme.themeColor}}/>}
             />);
     }
 
@@ -183,10 +184,10 @@ export default class PopularPages extends Component {
             <NavigatorBar
                 title={title}
                 style={{
-                    backgroundColor: '#2196f3'
+                    backgroundColor: this.state.theme.themeColor
                 }}
                 statusBar={{
-                    backgroundColor: '#2196f3'
+                    backgroundColor: this.state.theme.themeColor
                 }}
                 leftButton={ViewUtil.getLeftButton(() => this.onGoBack())}
                 rightButton={ViewUtil.getRightButton(rightButtonText, () => this.onSave())}

@@ -39,7 +39,8 @@ export default class SortKeyPage extends Component {
         this.sortResultArray = []; // 排序之后新生成的数组
         this.originalCheckedArray = []; // 记录上次标签排序的顺序
         this.state = {
-            checkedArray: [] //已经订阅的标签数组
+            checkedArray: [], //已经订阅的标签数组
+            theme: this.props.theme
         };
     }
 
@@ -140,10 +141,10 @@ export default class SortKeyPage extends Component {
             <NavigatorBar
                 title={'标签排序页'}
                 style={{
-                    backgroundColor: '#2196f3'
+                    backgroundColor: this.state.theme.themeColor
                 }}
                 statusBar={{
-                    backgroundColor: '#2196f3'
+                    backgroundColor: this.state.theme.themeColor
                 }}
                 leftButton={ViewUtil.getLeftButton(() => this.onGoBack())}
                 rightButton={
@@ -164,7 +165,7 @@ export default class SortKeyPage extends Component {
                     this.state.checkedArray.splice(e.to, 0, this.state.checkedArray.splice(e.from, 1)[0])
                     this.forceUpdate()
                 }}
-                renderRow={row => <SortCell data={row}/>}
+                renderRow={row => <SortCell data={row} theme={this.props.theme}/>}
             />
         </View>
     }
@@ -172,6 +173,7 @@ export default class SortKeyPage extends Component {
 
 // 创建拖拽列表的内容组件
 class SortCell extends Component {
+
     render() {
         return <TouchableHighlight
             underlayColor={'#eee'}
@@ -179,7 +181,7 @@ class SortCell extends Component {
             {...this.props.sortHandlers}
         >
             <View style={styles.row}>
-                <Image style={{width: 26, height: 26, tintColor: '#2196f3', marginRight: 15}}
+                <Image style={{width: 26, height: 26, tintColor: this.props.theme.themeColor, marginRight: 15}}
                        source={require('./img/ic_sort.png')}/>
                 <Text style={styles.text}>{this.props.data.name}</Text>
             </View>

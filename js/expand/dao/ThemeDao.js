@@ -24,7 +24,7 @@ export default class ThemeDao {
                 }
                 if(!r){
                     this.save(ThemeFlags.Default);
-                    r=THEME_KEY.Default;
+                    r=ThemeFlags.Default;
                 }
                 resolve(ThemFactory.createTheme(r))
             })

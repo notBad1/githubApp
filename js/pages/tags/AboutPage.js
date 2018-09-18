@@ -28,6 +28,7 @@ export default class AboutPage extends Component {
         this.state = {
             projectModels: [],
             author: config.author,
+            theme: this.props.theme
         };
     }
 
@@ -74,26 +75,28 @@ export default class AboutPage extends Component {
     }
 
     render() {
+        let color = this.state.theme.themeColor;
         let contentView = <View>
+
             {
                 this.aboutCommon.renderRepository(this.state.projectModels)
             }
             {
                 ViewUtil.getSetingItem(() => {
                     this.onClick(MORE_MENU.WebSite);
-                }, require('../../../res/images/ic_computer.png'), MORE_MENU.WebSite, '#2196f3')
+                }, require('../../../res/images/ic_computer.png'), MORE_MENU.WebSite, color)
             }
             <View style={GlobalStyles.line}/>
             {
                 ViewUtil.getSetingItem(() => {
                     this.onClick(MORE_MENU.About_Author);
-                }, require('./img/ic_insert_emoticon.png'), MORE_MENU.About_Author, '#2196f3')
+                }, require('./img/ic_insert_emoticon.png'), MORE_MENU.About_Author, color)
             }
             <View style={GlobalStyles.line}/>
             {
                 ViewUtil.getSetingItem(() => {
                     this.onClick(MORE_MENU.FeedBack);
-                }, require('../../../res/images/ic_feedback.png'), MORE_MENU.FeedBack, '#2196f3')
+                }, require('../../../res/images/ic_feedback.png'), MORE_MENU.FeedBack, color)
             }
             <View style={GlobalStyles.line}/>
         </View>;

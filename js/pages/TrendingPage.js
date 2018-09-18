@@ -141,7 +141,6 @@ export default class PopularPages extends Component {
 
     renderRightButton() {
         return <View style={{flexDirection: 'row'}}>
-            {ViewUtil.getSearchButton(() => this.onSeach())}
             {ViewUtil.getMoreButton(() => this.refs.moreMenuButton.open())}
         </View>
     }

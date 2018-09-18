@@ -35,7 +35,8 @@ export default class PopularPages extends Component {
             dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
             error: '',
             isLoading: false,
-            favoriteKeys: []
+            favoriteKeys: [],
+            theme: this.props.theme
         };
         // 初始化
         this.dataRepository = new DataRepository(FLAG_STORYGE.flag_trending);
@@ -159,7 +160,7 @@ export default class PopularPages extends Component {
                 onFavorite={(item, isFavorite) => {
                     ActionUtils.onFavorite(item, isFavorite,favoriteDao,FLAG_STORYGE.flag_trending)
                 }}
-                {...this.props}
+                theme={this.props.theme}
             />
         } else {
             return null
@@ -178,8 +179,8 @@ export default class PopularPages extends Component {
                         // 监听下拉状态 用户下拉刷新的时候获取数据
                         onRefresh={() => this.onRefresh()}
                         // 指示器颜色
-                        colors={['#2196f3']} //android
-                        tintColor={["#2196f3"]} //ios
+                        colors={[this.state.theme.themeColor]} //android
+                        tintColor={this.state.theme.themeColor} //ios
                         // 标题 ios
                         title={'loading...'}
                     />

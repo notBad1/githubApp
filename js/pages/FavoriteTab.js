@@ -28,7 +28,8 @@ export default class PopularPages extends Component {
             dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
             error: '',
             isLoading: false,
-            favoriteKeys: []
+            favoriteKeys: [],
+            theme: this.props.theme
         };
     }
 
@@ -110,7 +111,7 @@ export default class PopularPages extends Component {
                 ActionUtils.onFavorite(item, isFavorite, this.favoriteDao, this.props.flag);
                 this.onFavorite(item);
             }}
-            {...this.props}
+            theme={this.props.theme}
         />
     }
 
@@ -126,8 +127,8 @@ export default class PopularPages extends Component {
                         // 监听下拉状态 用户下拉刷新的时候获取数据
                         onRefresh={() => this.loadData()}
                         // 指示器颜色
-                        colors={['#2196f3']} //android
-                        tintColor={["#2196f3"]} //ios
+                        colors={[this.state.theme.themeColor]} //android
+                        tintColor={this.state.theme.themeColor} //ios
                         // 标题 ios
                         title={'loading...'}
                     />

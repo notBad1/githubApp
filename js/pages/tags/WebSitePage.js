@@ -20,7 +20,8 @@ export default class WebSitePage extends Component {
         this.state = {
             url: this.props.url,
             title: this.props.title, //标题
-            canCoBack: false // 是否可以返回
+            canCoBack: false, // 是否可以返回
+            theme: this.props.theme
         };
     }
 
@@ -44,10 +45,10 @@ export default class WebSitePage extends Component {
                 <NavigatorBar
                     title={this.state.title}
                     style={{
-                        backgroundColor: '#2196f3'
+                        backgroundColor: this.state.theme.themeColor
                     }}
                     statusBar={{
-                        backgroundColor: '#2196f3',
+                        backgroundColor: this.state.theme.themeColor,
                     }}
                     leftButton={ViewUtil.getLeftButton(() => this.onGoBack())}
                 />

@@ -125,6 +125,7 @@ export default class AboutCommon {
                     onFavorite={(item, isFavorite) => {
                         ViewUtil.onFavorite(item, isFavorite, this.favoriteDao, FLAG_STORYGE.flag_popular)
                     }}
+                    theme= {this.props.theme}
                 />
             )
         }
@@ -183,10 +184,11 @@ export default class AboutCommon {
 
     render(contentView, params) {
         let renderConfig = this.getParallaxRenderConfig(params);
+        let color = this.props.theme.themeColor;
         return (
             <ParallaxScrollView
                 headerBackgroundColor="#333"
-                backgroundColor="#2196f3"
+                backgroundColor={color}
                 stickyHeaderHeight={ STICKY_HEADER_HEIGHT }
                 parallaxHeaderHeight={ PARALLAX_HEADER_HEIGHT }
                 backgroundSpeed={10}

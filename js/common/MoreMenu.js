@@ -51,6 +51,7 @@ export default class MoreMenu extends Component {
         this.state = {
             isVisible: false, // 是否显示弹出框
             buttonRect: {}, //弹框显示位置
+            modalVisible: false
         }
     }
 
@@ -74,7 +75,8 @@ export default class MoreMenu extends Component {
             this.setState({
                 isVisible: true,
                 buttonRect: {x: px, y: py, width: width, height: height},
-                btn: ref
+                btn: ref,
+                modalVisible: true
             });
         });
     }
@@ -116,7 +118,9 @@ export default class MoreMenu extends Component {
                 params.isRemoveKey = true;
                 break;
             case MORE_MENU.Custom_Theme:
-                targetComponent = CustomThemePage;
+                this.setState({
+                    modalVisible: true
+                });
                 break;
             case MORE_MENU.About_Author:
                 targetComponent = AboutAuthorPage;
