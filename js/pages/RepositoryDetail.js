@@ -14,6 +14,7 @@ import {
     DeviceEventEmitter
 } from 'react-native';
 
+import BaseComponent from './BaseComponent'
 import NavigatorBar from '../../js/common/navigatorBar'
 import ViewUtil from '../util/ViewUtil'
 import ArrayUtils from '../util/ArrayUtils'
@@ -21,7 +22,7 @@ import FavoriteDao from '../../js/expand/dao/FavoriteDao'
 
 const TRENDING_URL = 'https://github.com';
 
-export default class RepositoryDetail extends Component {
+export default class RepositoryDetail extends BaseComponent {
     constructor(props) {
         super(props);
         this.url = this.props.projectModel.item.html_url ? this.props.projectModel.item.html_url : TRENDING_URL + this.props.projectModel.item.url;
@@ -36,10 +37,6 @@ export default class RepositoryDetail extends Component {
             favoriteIcon: this.props.projectModel.isFavorite ? require('../../res/images/ic_star.png') : require('../../res/images/ic_star_navbar.png'),
             theme: this.props.theme
         };
-    }
-
-    componentWillUnmount() {
-        if (this.props.onUpdateFavorite)this.props.onUpdateFavorite();
     }
 
     setFavoriteState(isFavorite) {
@@ -82,10 +79,6 @@ export default class RepositoryDetail extends Component {
             canCoBack: navState.canGoBack,
         });
     }
-
-    // componentWillReceiveProps(nextProps) {
-    //     this.setFavoriteState(nextProps.projectModel.isFavorite);
-    // }
 
     renderRightButton() {
         return <TouchableOpacity

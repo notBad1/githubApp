@@ -6,8 +6,7 @@ import {
     StyleSheet,
     Text,
     View,
-    Image,
-    TouchableOpacity
+    Modal
 } from 'react-native';
 
 // 导入第三方组件
@@ -19,6 +18,8 @@ import ViewUtil from '../util/ViewUtil'
 import NavigatorBar from '../common/navigatorBar'
 import PopularTab from './PopularTab'
 import SearchPage from './SearchPage'
+import BaseComponent from './BaseComponent'
+import CustomThemePage from './tags/CustomThemePage'
 // 弹出框
 import MoreMenu, {MORE_MENU} from '../common/MoreMenu'
 
@@ -26,14 +27,15 @@ import MoreMenu, {MORE_MENU} from '../common/MoreMenu'
 import LanguageDao, {FLAG_LANGUAGE}  from '../expand/dao/LanguageDao'
 
 
-export default class PopularPages extends Component {
+export default class PopularPages extends BaseComponent {
     constructor(props) {
         super(props);
         // 初始化languageDao
         this.languageDao = new LanguageDao(FLAG_LANGUAGE.flage_key);
         this.state = {
             languages: [], //标签数组
-            theme: this.props.theme
+            theme: this.props.theme,
+            modalVisible: false
         }
     }
 
@@ -48,6 +50,7 @@ export default class PopularPages extends Component {
 
     // 组件刚完成初始化
     componentDidMount() {
+        super.componentDidMount();
         // 加载数据
         this.loadData();
     }
@@ -85,6 +88,13 @@ export default class PopularPages extends Component {
             {...params}
             menus={menus}
             anchorView={() => this.refs.moreButton}
+            onMoreMenuSelected={(tab)=>{
+                if(tab === MORE_MENU.Custom_Theme){
+                    this.setState({
+                        modalVisible: true
+                    })
+                }
+            }}
             ref="moreMenuButton"
         />
     }
@@ -94,6 +104,20 @@ export default class PopularPages extends Component {
             {ViewUtil.getSearchButton(() => this.onSeach())}
             {ViewUtil.getMoreButton(() => this.refs.moreMenuButton.open())}
         </View>
+    }
+
+    onClose(){ // 关闭弹出框
+        this.setState({
+            modalVisible: false
+        })
+    }
+
+    returnThemeView(){
+        return <CustomThemePage
+            modalVisible={this.state.modalVisible}
+            onClose = {()=>this.onClose()}
+            {...this.props}
+        />
     }
 
     render() {
@@ -128,6 +152,8 @@ export default class PopularPages extends Component {
             {content}
             {/*弹出框*/}
             {this.renderMoreMenu()}
+            {/*自定义主题弹出框*/}
+            {this.returnThemeView()}
         </View>
     }
 }

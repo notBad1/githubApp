@@ -20,13 +20,16 @@ import FavoritePage from './FavoritePage'
 import TrendingPage from './TrendingPage'
 import MyPage from './MyPage'
 
+import BaseComponent from './BaseComponent'
+
 // import WebViewTest from '../../WebViewTest'
 // import TrendingTest from '../../TrendingTest'
 // import AsyncStorageTest from '../../AsyncStorageTest'
 
 export const ACTION_HOME = {
     'A_SHOWST': 'showToast',
-    'A_RESTART': 'restart'
+    'A_RESTART': 'restart',
+    'A_THEME': 'theme'
 };
 export const FLAG_TAB = {
     flag_popularTab: 'tb_popular',
@@ -35,7 +38,7 @@ export const FLAG_TAB = {
     flag_myTab: 'tb_my'
 };
 
-export default class HomePage extends Component {
+export default class HomePage extends BaseComponent {
     constructor(props) {
         super(props);
         let selectedTab = this.props.selectedTab ? this.props.selectedTab : 'tb_popular';
@@ -47,6 +50,7 @@ export default class HomePage extends Component {
 
     // 在组件完成加载的时候，希望注册一个通知
     componentDidMount() {
+        super.componentDidMount();
         this.listenter = DeviceEventEmitter.addListener('ACTION_HOME', (action, params) => {
             this.onAction(action, params);
         })
@@ -80,6 +84,7 @@ export default class HomePage extends Component {
 
     // 组件卸载的时候取消监听
     componentWillUnmount() {
+        super.componentWillUnmount();
         // 取消监听
         this.listenter && this.listenter.remove();
     }
@@ -93,7 +98,7 @@ export default class HomePage extends Component {
             renderIcon={() => <Image style={styles.image} source={Icon}/>}
             renderSelectedIcon={() => <Image style={[styles.image, {tintColor: this.state.theme.themeColor}]} source={Icon}/>}
             onPress={() => this.setState({selectedTab: selectedTab})}>
-            <Component {...this.props}/>
+            <Component {...this.props} theme={this.state.theme}/>
         </TabNavigator.Item>
     }
 

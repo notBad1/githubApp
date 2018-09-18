@@ -11,6 +11,7 @@ import {
     TouchableHighlight
 } from 'react-native';
 
+import BaseComponent from './BaseComponent'
 import NavigatorBar from '../common/navigatorBar'
 import {MORE_MENU} from '../common/MoreMenu'
 import GlobalStyles from '../../res/styles/GlobalStyles'
@@ -24,7 +25,7 @@ import CustomThemePage from './tags/CustomThemePage'
 import AboutAuthorPage from './tags/AboutAuthorPage'
 
 
-export default class PopularPages extends Component {
+export default class PopularPages extends BaseComponent {
     constructor(props) {
         super(props);
         this.state = {

@@ -63,6 +63,11 @@ export default class PopularPages extends Component {
         if (this.isFavoriteChange) {
             this.isFavoriteChange = false;
             this.getFavoriteKeys();
+        }else if(nextProps.theme !== this.state.theme){
+            this.updateSetState({
+                theme: nextProps.theme
+            });
+            this.flushFavoriteState();
         }
     }
 

@@ -19,6 +19,8 @@ import ViewUtil from '../util/ViewUtil'
 import MoreMenu, {MORE_MENU} from '../common/MoreMenu'
 import TimeSpan from '../model/TimeSpan'
 import Popover from '../common/Popover'
+import BaseComponent from './BaseComponent'
+import CustomThemePage from './tags/CustomThemePage'
 
 // 导入第三方组件
 import ScrollableTabView, {ScrollableTabBar,} from 'react-native-scrollable-tab-view'
@@ -33,7 +35,7 @@ const timeSpanTextArray = [
     new TimeSpan('本 月', 'monthly')
 ];
 
-export default class PopularPages extends Component {
+export default class PopularPages extends BaseComponent {
     constructor(props) {
         super(props);
         // 初始化languageDao
@@ -44,12 +46,14 @@ export default class PopularPages extends Component {
             buttonRect: {}, //弹框显示位置
             timeSpan: timeSpanTextArray[0],
             btn: '',
-            theme: this.props.theme
+            theme: this.props.theme,
+            modalVisible: false
         }
     }
 
     // 组件刚完成初始化
     componentDidMount() {
+        super.componentDidMount();
         // 加载数据
         this.loadData();
     }
@@ -135,7 +139,28 @@ export default class PopularPages extends Component {
             {...params}
             menus={menus}
             anchorView={() => this.refs.moreButton}
+            onMoreMenuSelected={(tab)=>{
+                if(tab === MORE_MENU.Custom_Theme){
+                    this.setState({
+                        modalVisible: true
+                    })
+                }
+            }}
             ref="moreMenuButton"
+        />
+    }
+
+    onClose(){ // 关闭弹出框
+        this.setState({
+            modalVisible: false
+        })
+    }
+
+    returnThemeView(){
+        return <CustomThemePage
+            modalVisible={this.state.modalVisible}
+            onClose = {()=>this.onClose()}
+            {...this.props}
         />
     }
 
@@ -210,6 +235,8 @@ export default class PopularPages extends Component {
             {/*弹出框*/}
             {timeSpanView}
             {this.renderMoreMenu()}
+            {/*自定义主题弹出框*/}
+            {this.returnThemeView()}
         </View>
     }
 }

@@ -51,7 +51,6 @@ export default class MoreMenu extends Component {
         this.state = {
             isVisible: false, // 是否显示弹出框
             buttonRect: {}, //弹框显示位置
-            modalVisible: false
         }
     }
 
@@ -90,6 +89,9 @@ export default class MoreMenu extends Component {
     //菜单点击方法
     onMenuSelected(tab) {
         this.closePopover(); // 关闭弹出框
+        if(typeof (this.props.onMoreMenuSelected) === 'function'){
+            this.props.onMoreMenuSelected(tab);
+        }
         // 打开页面
         let targetComponent, params = {...this.props, menuType: tab};
         switch (tab) {
@@ -118,9 +120,6 @@ export default class MoreMenu extends Component {
                 params.isRemoveKey = true;
                 break;
             case MORE_MENU.Custom_Theme:
-                this.setState({
-                    modalVisible: true
-                });
                 break;
             case MORE_MENU.About_Author:
                 targetComponent = AboutAuthorPage;

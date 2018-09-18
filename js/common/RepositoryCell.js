@@ -12,10 +12,12 @@ import {
     TouchableOpacity
 } from 'react-native';
 
+import BaseComponent from '../pages/BaseComponent'
+
 import HTMLView from 'react-native-htmlview';
 
 
-export default class RepositoryCell extends Component {
+export default class RepositoryCell extends BaseComponent {
     constructor(props) {
         super(props);
         this.state = {

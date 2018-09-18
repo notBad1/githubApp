@@ -15,8 +15,9 @@ import {
 } from 'react-native';
 
 // 自定义主题颜色
-import {ThemeFlags} from '../../../res/styles/ThemFactory'
+import ThemFactory,{ThemeFlags} from '../../../res/styles/ThemFactory'
 import ThemeDao from '../../expand/dao/ThemeDao'
+import {ACTION_HOME} from '../HomePage'
 
 
 export default class PopularPages extends Component {
@@ -29,6 +30,7 @@ export default class PopularPages extends Component {
     onSelectedTheme(themeKey){
         this.props.onClose(themeKey);
         this.themeDao.save(ThemeFlags[themeKey]);
+        DeviceEventEmitter.emit('ACTION_BASE',ACTION_HOME.A_THEME,ThemFactory.createTheme(ThemeFlags[themeKey]));
     }
 
     getItem (themeKey){

@@ -39,6 +39,11 @@ export default class PopularPages extends Component {
 
     componentWillReceiveProps(nextProps) { // 在props改变的时候调用
         this.loadData(false);
+        if(nextProps.theme !== this.state.theme){
+            this.updateSetState({
+                theme: nextProps.theme
+            });
+        }
     }
 
 

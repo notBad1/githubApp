@@ -169,6 +169,7 @@ export default class SearchPage extends Component {
             onFavorite={(item, isFavorite) => {
                 ActionUtils.onFavorite(item, isFavorite, favoriteDao, FLAG_STORYGE.flag_popular)
             }}
+            theme={this.props.theme}
         />
     }
 

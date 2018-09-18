@@ -124,11 +124,16 @@ export default class PopularPages extends Component {
     componentWillReceiveProps(nextProps) { // 在props改变的时候调用
         if (nextProps.timeSpan !== this.props.timeSpan) {
             this.loadData(nextProps.timeSpan, true);
-        }
-        if (this.isFavoriteChange) {
+        } else if (this.isFavoriteChange) {
             this.isFavoriteChange = false;
             this.getFavoriteKeys();
+        } else if (nextProps.theme !== this.state.theme) {
+            this.updateSetState({
+                theme: nextProps.theme
+            });
+            this.flushFavoriteState();
         }
+
     }
 
     // 组件卸载的时候移除监听
@@ -158,7 +163,7 @@ export default class PopularPages extends Component {
                     })
                 }}
                 onFavorite={(item, isFavorite) => {
-                    ActionUtils.onFavorite(item, isFavorite,favoriteDao,FLAG_STORYGE.flag_trending)
+                    ActionUtils.onFavorite(item, isFavorite, favoriteDao, FLAG_STORYGE.flag_trending)
                 }}
                 theme={this.props.theme}
             />
