@@ -66,6 +66,7 @@ import com.android.build.OutputFile
  */
 
 apply from: "../../node_modules/react-native/react.gradle"
+apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -91,7 +92,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -108,6 +109,15 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            buildConfigField "String", "CODEPUSH_KEY", '"qs-iVvT-MpshZZ_Wh_FLsnGOOMxM130cf141-b9be-42cc-b852-60ebb0f392ab"'
+        }
+
+        releaseStaging {
+            buildConfigField "String", "CODEPUSH_KEY", '"ws3IXTJkqSX2Y0kx6pdQJTIkPZ9e130cf141-b9be-42cc-b852-60ebb0f392ab"'
+        }
+        debug {
+            buildConfigField "String", "CODEPUSH_KEY", '"ws3IXTJkqSX2Y0kx6pdQJTIkPZ9e130cf141-b9be-42cc-b852-60ebb0f392ab"'
+
         }
     }
     // applicationVariants are e.g. debug, release
@@ -123,9 +133,12 @@ android {
             }
         }
     }
+
 }
 
 dependencies {
+    compile project(':react-native-code-push')
+    compile project(':react-native-splash-screen')
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:23.0.1"
     compile "com.facebook.react:react-native:+"  // From node_modules

@@ -13,6 +13,8 @@ import HomePage from './HomePage'
 
 import ThemeDao from '../expand/dao/ThemeDao'
 
+import SplashScreen from 'react-native-splash-screen'
+
 export default class WelcomePage extends Component{
     constructor(props) {
         super(props);
@@ -20,10 +22,12 @@ export default class WelcomePage extends Component{
         }
     }
     componentDidMount () {
+
         new ThemeDao().getTheme().then((r)=>{
             this.theme = r
         });
         this.timer = setTimeout(()=>{
+            SplashScreen.hide();
             // 跳转到首页
             this.props.navigator.resetTo({
                 component: HomePage,
@@ -31,7 +35,8 @@ export default class WelcomePage extends Component{
                     theme : this.theme
                 }
             })
-        },2000)
+        },1000)
+
     }
 
     componentWillUnmount (){
@@ -39,20 +44,6 @@ export default class WelcomePage extends Component{
     }
 
     render () {
-        return <View style={styles.container}>
-            <Text style={styles.text}>欢迎</Text>
-        </View>
+        return null;
     }
 }
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-    },
-    text: {
-        fontSize: 26,
-        color: '#333'
-    }
-});

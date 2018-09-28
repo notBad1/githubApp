@@ -23,6 +23,7 @@ import CostomKeyPage from './tags/CostomKeyPage'
 import SortKeyPage from './tags/SortKeyPage'
 import CustomThemePage from './tags/CustomThemePage'
 import AboutAuthorPage from './tags/AboutAuthorPage'
+import codePush from 'react-native-code-push'
 
 
 export default class PopularPages extends BaseComponent {
@@ -82,7 +83,11 @@ export default class PopularPages extends BaseComponent {
             case MORE_MENU.About_Author:
                 targetComponent = AboutAuthorPage;
                 break;
+            case '更新':
+                this.update();
+                break;
         }
+
 
         if (targetComponent) {
             this.props.navigator.push({
@@ -91,6 +96,19 @@ export default class PopularPages extends BaseComponent {
             })
         }
 
+    }
+
+    update(){
+        codePush.sync({
+            updateDialog: {
+                appendReleaseDescription: true,
+                descriptionPrefix:'更新内容：',
+                title:'更新',
+                mandatoryUpdateMessage:'',
+                mandatoryContinueButtonLabel:'更新',
+            },
+            mandatoryInstallMode:codePush.InstallMode.IMMEDIATE,
+        });
     }
 
     render() {
@@ -179,6 +197,14 @@ export default class PopularPages extends BaseComponent {
                         }, require('./tags/img/ic_insert_emoticon.png'), '关于作者', this.state.theme.themeColor, null)
                 }
                 <View style={GlobalStyles.line}/>
+                {
+                    ViewUtil.getSetingItem(
+                        () => {
+                            this.onClick("更新")
+                        }, require('./tags/img/ic_insert_emoticon.png'), '检查更新', this.state.theme.themeColor, null)
+                }
+                <View style={GlobalStyles.line}/>
+                <View style={{marginBottom: 60}}/>
             </ScrollView>
 
             {this.returnThemeView()}
@@ -193,7 +219,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: '#fff',
+        backgroundColor: '#f00',
         paddingHorizontal: 10,
         paddingVertical: 25
     },
