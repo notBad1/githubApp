@@ -18,7 +18,6 @@ import {FLAG_TAB} from  './HomePage'
 import ViewUtil from '../util/ViewUtil'
 import MoreMenu, {MORE_MENU} from '../common/MoreMenu'
 import TimeSpan from '../model/TimeSpan'
-import Popover from '../common/Popover'
 import BaseComponent from './BaseComponent'
 import CustomThemePage from './tags/CustomThemePage'
 
@@ -73,20 +72,20 @@ export default class PopularPages extends BaseComponent {
     }
 
     // 显示弹出框
-    showPopover(ref) {
-        this.refs[ref].measure((ox, oy, width, height, px, py) => {
-            this.setState({
-                isVisible: true,
-                buttonRect: {x: px, y: py, width: width, height: height},
-                btn: ref
-            });
-        });
-    }
+    // showPopover(ref) {
+    //     this.refs[ref].measure((ox, oy, width, height, px, py) => {
+    //         this.setState({
+    //             isVisible: true,
+    //             buttonRect: {x: px, y: py, width: width, height: height},
+    //             btn: ref
+    //         });
+    //     });
+    // }
 
     // 关闭弹出框
-    closePopover() {
-        this.setState({isVisible: false});
-    }
+    // closePopover() {
+    //     this.setState({isVisible: false});
+    // }
 
     onSelected(item) {
         this.setState({
@@ -102,7 +101,7 @@ export default class PopularPages extends BaseComponent {
         return <View>
             <TouchableOpacity ref="button"
                               onPress={() => {
-                                  this.showPopover('button')
+                                  {/*this.showPopover('button')*/}
                               }}
             >
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -190,31 +189,31 @@ export default class PopularPages extends BaseComponent {
                 })}
             </ScrollableTabView>
             : null;
-        let timeSpanView =
-            <Popover
-                isVisible={this.state.isVisible}
-                fromRect={this.state.buttonRect}
-                placement="bottom"
-                onClose={() => {
-                    this.closePopover()
-                }}
-                contentStyle={{backgroundColor: '#000', opacity: 0.7}}
-            >
-                {timeSpanTextArray.map((item, i, arry) => {
-                    return <Text key={i}
-                                 onPress={() => {
-                                     this.onSelected(item)
-                                 }}
-                                 style={{
-                                     fontSize: 16,
-                                     color: '#fff',
-                                     paddingHorizontal: 15,
-                                     marginVertical: 8
-                                 }}
-                    >{item.showText}</Text>
-                })}
-
-            </Popover>;
+        let timeSpanView =null;
+            {/*<Popover*/}
+                {/*isVisible={this.state.isVisible}*/}
+                {/*fromRect={this.state.buttonRect}*/}
+                {/*placement="bottom"*/}
+                {/*onClose={() => {*/}
+                    {/*this.closePopover()*/}
+                {/*}}*/}
+                {/*contentStyle={{backgroundColor: '#000', opacity: 0.7}}*/}
+            {/*>*/}
+                {/*{timeSpanTextArray.map((item, i, arry) => {*/}
+                    {/*return <Text key={i}*/}
+                                 {/*onPress={() => {*/}
+                                     {/*this.onSelected(item)*/}
+                                 {/*}}*/}
+                                 {/*style={{*/}
+                                     {/*fontSize: 16,*/}
+                                     {/*color: '#fff',*/}
+                                     {/*paddingHorizontal: 15,*/}
+                                     {/*marginVertical: 8*/}
+                                 {/*}}*/}
+                    {/*>{item.showText}</Text>*/}
+            //     })}
+            //
+            // </Popover>;
 
         return <View style={styles.container}>
             <NavigatorBar

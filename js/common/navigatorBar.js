@@ -2,15 +2,18 @@
  * Created by Administrator on 2018-8-9.
  * 导航页面
  */
-import React, {Component,PropTypes} from 'react';
+import React, {Component} from 'react';
 import {
     View,
     Text,
     Image,
     StyleSheet,
     Platform,
-    StatusBar
+    StatusBar,
+    ViewPropTypes
 } from 'react-native';
+
+import PropTypes from 'prop-types'
 
 // 定义常量
 const NAV_BAR_HEIGHT_ANDROID = 50;
@@ -26,7 +29,7 @@ export default class NavigatorBar extends Component {
     // 属性约束
     static propTypes = {
         // 样式约束 必须使用View的样式
-        style: View.propTypes.style,
+        style: ViewPropTypes.style,
         // 标题
         title: PropTypes.string,
         // 标题元素

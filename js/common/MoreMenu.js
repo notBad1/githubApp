@@ -4,18 +4,17 @@
  * 可配置菜单
  */
 
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import {
     StyleSheet,
     Text,
     View,
     TouchableOpacity,
-    Linking
+    Linking,
+    ViewPropTypes
 } from 'react-native';
 
-
-import Popover from '../common/Popover'
-
+import PropTypes from 'prop-types'
 
 // 页面组件
 import {FLAG_LANGUAGE}  from '../expand/dao/LanguageDao'
@@ -27,8 +26,6 @@ import SortKeyPage from '../pages/tags/SortKeyPage'
 import AboutAuthorPage from '../pages/tags/AboutAuthorPage'
 // 关于我
 import AboutPage from '../pages/tags/AboutPage'
-// 主题
-import CustomThemePage from '../pages/tags/CustomThemePage'
 
 
 export const MORE_MENU = {
@@ -56,34 +53,34 @@ export default class MoreMenu extends Component {
 
     // 定义组件属性
     static propTypes = {
-        conentStyle: View.propTypes.style, // 组件样式
+        conentStyle: ViewPropTypes.style, // 组件样式
         menus: PropTypes.array.isRequired,//菜单数组,必选
         anchorView: PropTypes.func, // 弹出框显示位置的元素
     };
 
     // 打开更多菜单
-    open() {
-        this.showPopover();
-    }
+    // open() {
+    //     this.showPopover();
+    // }
 
     // 显示弹出框
-    showPopover(ref) {
-        if (!this.props.anchorView())return;
-        let anchorView = this.props.anchorView();
-        anchorView.measure((ox, oy, width, height, px, py) => {
-            this.setState({
-                isVisible: true,
-                buttonRect: {x: px, y: py, width: width, height: height},
-                btn: ref,
-                modalVisible: true
-            });
-        });
-    }
+    // showPopover(ref) {
+    //     if (!this.props.anchorView())return;
+    //     let anchorView = this.props.anchorView();
+    //     anchorView.measure((ox, oy, width, height, px, py) => {
+    //         this.setState({
+    //             isVisible: true,
+    //             buttonRect: {x: px, y: py, width: width, height: height},
+    //             btn: ref,
+    //             modalVisible: true
+    //         });
+    //     });
+    // }
 
     // 关闭弹出框
-    closePopover() {
-        this.setState({isVisible: false});
-    }
+    // closePopover() {
+    //     this.setState({isVisible: false});
+    // }
 
 
     //菜单点击方法
@@ -150,32 +147,33 @@ export default class MoreMenu extends Component {
 
 
     renderMoreMenu() {
-        let view = <Popover
-            isVisible={this.state.isVisible}
-            fromRect={this.state.buttonRect}
-            placement="bottom"
-            contentMarginRight={10}
-            onClose={() => {
-                this.closePopover()
-            }}
-            contentStyle={{backgroundColor: '#343434', opacity: 0.85}}
-        >
-            {this.props.menus.map((item, i, arry) => {
-                return <Text key={i}
-                             onPress={() => {
-                                 this.onMenuSelected(arry[i])
-                             }}
-                             style={{
-                                 fontSize: 16,
-                                 color: '#fff',
-                                 paddingHorizontal: 15,
-                                 marginVertical: 8,
-                                 textAlign: 'center'
-                             }}
-                >{arry[i]}</Text>
-            })}
+        let view = null;
+            {/*<Popover*/}
+            {/*isVisible={this.state.isVisible}*/}
+            {/*fromRect={this.state.buttonRect}*/}
+            {/*placement="bottom"*/}
+            {/*contentMarginRight={10}*/}
+            {/*onClose={() => {*/}
+                {/*this.closePopover()*/}
+            {/*}}*/}
+            {/*contentStyle={{backgroundColor: '#343434', opacity: 0.85}}*/}
+        {/*>*/}
+            {/*{this.props.menus.map((item, i, arry) => {*/}
+                {/*return <Text key={i}*/}
+                             {/*onPress={() => {*/}
+                                 {/*this.onMenuSelected(arry[i])*/}
+                             {/*}}*/}
+                             {/*style={{*/}
+                                 {/*fontSize: 16,*/}
+                                 {/*color: '#fff',*/}
+                                 {/*paddingHorizontal: 15,*/}
+                                 {/*marginVertical: 8,*/}
+                                 {/*textAlign: 'center'*/}
+                             {/*}}*/}
+                {/*>{arry[i]}</Text>*/}
+            {/*})}*/}
 
-        </Popover>;
+        {/*</Popover>;*/}
         return view;
     }
 
