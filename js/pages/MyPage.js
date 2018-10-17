@@ -31,7 +31,7 @@ export default class PopularPages extends BaseComponent {
         super(props);
         this.state = {
             modalVisible: false,
-            theme: this.props.theme
+            theme: this.props.theme // 测试
         }
     }
 
